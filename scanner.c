@@ -295,7 +295,7 @@ scanstr(char *input)
 	scr->tqueue = newqueue();
 	scr->pos = scr->start = scr->column = 0;
 	scr->inlen = strlen(input);
-	scr->input = estrdup(input);
+	scr->input = input;
 	scr->line = 1;
 
 	if (pthread_create(scr->thread, NULL, lexany, (void*)scr))
@@ -318,7 +318,6 @@ freescanner(scanner *scr)
 		die("pthread_cancel failed");
 
 	free(scr->thread);
-	free(scr->input);
 	freequeue(scr->tqueue);
 	free(scr);
 }

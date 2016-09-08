@@ -25,23 +25,6 @@
 #include "util.h"
 
 /**
- * Calls strdup(3) but terminates the program EXIT_FAILURE if strdup returned
- * an error.
- *
- * @param s Pointer to a string which should be duplicated.
- * @returns Pointer to a new string which is a duplicate of the given one.
- */
-char*
-estrdup(char *s) {
-	char *r;
-
-	if (!(r = strdup(s)))
-		die("strdup failed");
-
-	return r;
-}
-
-/**
  * Calls estrndup(3) but terminates the program EXIT_FAILURE if strndup returned
  * an error.
  *
