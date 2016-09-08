@@ -74,8 +74,9 @@ main(int argc, char **argv)
 	}
 
 	free(fc);
-	writetape(tm, in);
+	freeparser(par);
 
+	writetape(tm, in);
 	if (runtm(tm))
 		return 1;
 	else
