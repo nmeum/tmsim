@@ -24,6 +24,7 @@
 #define die(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
+int xstrncmp(char*, char*, size_t);
 char *estrndup(char *s, size_t n);
 void *emalloc(size_t size);
 

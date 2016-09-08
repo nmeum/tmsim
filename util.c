@@ -25,6 +25,32 @@
 #include "util.h"
 
 /**
+ * Compares the first 'n' bytes of two strings (like strncmp(3)).
+ * However, unlike strncmp(3) it returns the position of the
+ * first character that differed.
+ *
+ * @param s1 First string to use for comparison.
+ * @param s2 Second string to use for comparison.
+ * @param n Amount of bytes to compare.
+ * @returns -1 If the two strings are equal, otherwise the position
+ * 	of the first character that differed is returned.
+ */
+int
+xstrncmp(char *s1, char *s2, size_t n)
+{
+	int i;
+
+	i = 1;
+	while (*s1 && *s1 == *s2 && i < n) {
+		s1++;
+		s2++;
+		i++;
+	}
+
+	return (*s1 == *s2) ? -1 : i;
+}
+
+/**
  * Calls estrndup(3) but terminates the program EXIT_FAILURE if strndup returned
  * an error.
  *
