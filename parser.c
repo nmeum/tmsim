@@ -97,8 +97,144 @@ newparser(char *str)
 
 	par = emalloc(sizeof(parser));
 	par->scr = scanstr(str);
-	par->peektok = par->prevtok = NULL;
+	par->peektok = par->prevtok = par->tok = NULL;
 	return par;
+}
+
+/**
+ * Formats a parerr as a string and includes line and column information
+ * where the error (presumably) ocurred. The string is directly written
+ * to the given stream.
+ *
+ * @pre Parser must have encountered an error.
+ * @param par Parser which returned the parerr.
+ * @param parerr Parser error returned by ::parsetm.
+ * @param fn Name of the file the parser was trying to parse.
+ * @param stream Stream to write error message to.
+ * @return Number of characters written to the stream.
+ */
+int
+strparerr(parser *par, parerr err, char *fn, FILE *stream)
+{
+	token *tok;
+	char *msg;
+
+	assert(err != PAR_OK);
+	tok = par->tok;
+	assert(tok);
+
+	/* Check for scanner error. */
+	if (tok->type == TOK_ERROR) {
+		switch (tok->value) {
+		case ERR_OVERFLOW:
+			msg = "Integer overflow while converting "
+				"a numeric state name to a string.";
+			goto ret;
+		case ERR_UNDERFLOW:
+			msg = "Integer underflow while converting "
+				"a numeric state name to a string.";
+			goto ret;
+		case ERR_UNKOWN:
+			msg = "Lexer encountered an unkown character.";
+			goto ret;
+		case ERR_UNEXPECTED:
+			msg = "A terminal string was expected but the "
+				"lexer encountered a character which is "
+				"not part of the expected string. Perhaps "
+				"you misspelled 'start:' or 'accept:'.";
+			goto ret;
+		}
+	}
+
+	/* Wasn't a lexer error so the err parameter is actually relevant. */
+	switch (err) {
+	case PAR_SEMICOLON:
+		msg = "Missing semicolon, maybe the previous transition "
+			"is missing a semicolon or a metadata information "
+			"was not properly terminated with a semicolon.";
+		break;
+	case PAR_STATEDEFTWICE:
+		msg = "This state was already defined previously. You can't "
+			"define states twice please move all transitions from "
+			"this state definition to the previous definition.";
+		break;
+	case PAR_TRANSDEFTWICE:
+		msg = "Only deterministic turing machines are supported. "
+			"Meaning you can't have more than one transition "
+			"for the same input symbol.";
+		break;
+	case PAR_STARTKEY:
+		msg = "An initial state was defined. Please define it "
+			"using the 'start:' keyword.";
+		break;
+	case PAR_INITALSTATE:
+		msg = "The initial state value cannot be left empty.";
+		break;
+	case PAR_ACCEPTKEY:
+		msg = "Accepting states where not defined. Please define "
+			"one or more accepting states using the "
+			"'accept:' keyword.";
+		break;
+	case PAR_TOOMANYACCEPT:
+		msg = "You defined too many accepting states, the maximum "
+			"number of accepting states is hard-coded.";
+		break;
+	case PAR_ACCEPTSTATE:
+		msg = "You need to define at least one accepting states.";
+		break;
+	case PAR_NONSTATEACCEPT:
+		msg = "Your accepting state list contains a token which is "
+			"not a state name. The list can only consist of "
+			"valid state names.";
+		break;
+	case PAR_STATEDEF:
+		msg = "Expected a state definition but didn't find a valid "
+			"state name. Valid state names must match the "
+			"following regex: 'q[0-9]*'.";
+		break;
+	case PAR_LBRACKET:
+		msg = "The parser expected an opening curly bracket as a "
+			"part of this state definition but found a "
+			"different symbol.";
+		break;
+	case PAR_RBRACKET:
+		msg = "The parser expected a closing curly bracket as a "
+			"part of this state definition but found a "
+			"different symbol.";
+		break;
+	case PAR_RSYMBOL:
+		msg = "Your transition definition is missing a symbol "
+			"which triggers this transition. This symbol "
+			"can only be an alphanumeric character, a digit "
+			"or the special blank character.";
+		break;
+	case PAR_DIRECTION:
+		msg = "Expected direction to move head to, this symbol is "
+			"not a valid head direction symbol.";
+		break;
+	case PAR_WSYMBOL:
+		msg = "Your transition definition is missing a symbol "
+			"which is written to the tape when this transition "
+			"is performed. This symbol can only be an "
+			"alphanumeric character, a digit or the "
+			"special blank character.";
+		break;
+	case PAR_NEXTSTATESYM:
+		msg = "The next state symbol ('=>') was expected but "
+			"not found.";
+		break;
+	case PAR_NEXTSTATE:
+		msg = "Your transition is missing a state to transit to "
+			"when performing this transition.";
+		break;
+	case PAR_OK:
+		/* Never reached */
+		break;
+	}
+
+ret:
+	return fprintf(stream, "%s:%d:%d: %s\n", fn, tok->line,
+			tok->column, msg);
 }
 
 /**
@@ -110,6 +246,8 @@ void
 freeparser(parser *par)
 {
 	assert(par);
+
+	/* Tokens are freed in the next method. */
 
 	freescanner(par->scr);
 	free(par);
@@ -134,41 +272,38 @@ freeparser(parser *par)
 parerr
 parsemeta(parser *par, dtm *dest)
 {
-	int i;
-	token *tok;
+	int i = 0;
 
-	tok = next(par);
-	if (tok->type != TOK_START)
+	par->tok = next(par);
+	if (par->tok->type != TOK_START)
 		return PAR_STARTKEY;
 
-	tok = next(par);
-	if (tok->type != TOK_STATE)
+	par->tok = next(par);
+	if (par->tok->type != TOK_STATE)
 		return PAR_INITALSTATE;
-	dest->start = tok->value;
+	dest->start = par->tok->value;
 
 	EXPSEM(next(par));
 
-	tok = next(par);
-	if (tok->type != TOK_ACCEPT)
+	par->tok = next(par);
+	if (par->tok->type != TOK_ACCEPT)
 		return PAR_ACCEPTKEY;
 
-	tok = next(par);
-	for (i = 0; tok->type == TOK_STATE; tok = next(par)) {
+	do {
+		par->tok = next(par);
 		if (i > MAXACCEPT)
 			return PAR_TOOMANYACCEPT;
-		dest->accept[i++] = tok->value;
 
-		tok = next(par);
-		if (tok->type == TOK_SEMICOLON)
-			break;
-		else if (tok->type != TOK_COMMA)
-			return PAR_MISSINGCOMMA;
-	}
+		if (par->tok->type != TOK_STATE)
+			return PAR_NONSTATEACCEPT;
+		dest->accept[i++] = par->tok->value;
 
-	if (i <= 0)
-		return PAR_ACCEPTSTATE;
-	else
-		dest->acceptsiz = i;
+		par->tok = next(par);
+	} while (par->tok->type == TOK_COMMA &&
+		par->tok->type != TOK_SEMICOLON);
+
+	EXPSEM(par->tok);
+	dest->acceptsiz = i;
 
 	return PAR_OK;
 }
@@ -191,15 +326,13 @@ parsemeta(parser *par, dtm *dest)
 parerr
 parsetrans(parser *par, int *rsym, tmtrans *dest)
 {
-	token *tok;
-
-	tok = next(par);
-	if (tok->type != TOK_SYMBOL)
+	par->tok = next(par);
+	if (par->tok->type != TOK_SYMBOL)
 		return PAR_RSYMBOL;
-	*rsym = tok->value;
+	*rsym = par->tok->value;
 
-	tok = next(par);
-	switch (tok->type) {
+	par->tok = next(par);
+	switch (par->tok->type) {
 	case TOK_SMALLER:
 		dest->headdir = LEFT;
 		break;
@@ -213,19 +346,19 @@ parsetrans(parser *par, int *rsym, tmtrans *dest)
 		return PAR_DIRECTION;
 	}
 
-	tok = next(par);
-	if (tok->type != TOK_SYMBOL)
+	par->tok = next(par);
+	if (par->tok->type != TOK_SYMBOL)
 		return PAR_WSYMBOL;
-	dest->symbol = tok->value;
+	dest->symbol = par->tok->value;
 
-	tok = next(par);
-	if (tok->type != TOK_NEXT)
+	par->tok = next(par);
+	if (par->tok->type != TOK_NEXT)
 		return PAR_NEXTSTATESYM;
 
-	tok = next(par);
-	if (tok->type != TOK_STATE)
+	par->tok = next(par);
+	if (par->tok->type != TOK_STATE)
 		return PAR_NEXTSTATE;
-	dest->nextstate = tok->value;
+	dest->nextstate = par->tok->value;
 
 	return PAR_OK;
 }
@@ -249,21 +382,21 @@ parsestate(parser *par, tmstate *dest)
 {
 	int rsym;
 	tmtrans *trans;
+	token *t;
 	parerr ret;
-	token *tok;
 
-	tok = next(par);
-	if (tok->type != TOK_STATE)
+	par->tok = next(par);
+	if (par->tok->type != TOK_STATE)
 		return PAR_STATEDEF;
-	dest->name = tok->value;
+	dest->name = par->tok->value;
 
-	tok = next(par);
-	if (tok->type != TOK_LBRACKET)
+	par->tok = next(par);
+	if (par->tok->type != TOK_LBRACKET)
 		return PAR_LBRACKET;
 
-	while ((tok = peek(par))->type != TOK_RBRACKET) {
+	while ((t = peek(par))->type != TOK_RBRACKET) {
 		trans = emalloc(sizeof(tmtrans));
-		if ((ret = parsetrans(par, &rsym, trans) != PAR_OK)) {
+		if ((ret = parsetrans(par, &rsym, trans)) != PAR_OK) {
 			free(trans);
 			return ret;
 		}
@@ -276,8 +409,8 @@ parsestate(parser *par, tmstate *dest)
 		EXPSEM(next(par));
 	}
 
-	tok = next(par);
-	if (tok->type != TOK_RBRACKET)
+	par->tok = next(par);
+	if (par->tok->type != TOK_RBRACKET)
 		return PAR_RBRACKET;
 
 	return PAR_OK;
@@ -301,10 +434,10 @@ parerr
 parsestates(parser *par, dtm *dest)
 {
 	parerr ret;
-	token *tok;
 	tmstate *state;
+	token *t;
 
-	while ((tok = peek(par))->type != TOK_EOF) {
+	while ((t = peek(par))->type != TOK_EOF) {
 		state = newtmstate();
 		if ((ret = parsestate(par, state)) != PAR_OK) {
 			free(state);
@@ -316,8 +449,8 @@ parsestates(parser *par, dtm *dest)
 	}
 
 	/* skip and free EOF */
-	tok = next(par);
-	freetoken(tok);
+	par->tok = next(par);
+	freetoken(par->tok);
 
 	return PAR_OK;
 }

@@ -167,6 +167,7 @@ lexany(void *pscr)
 		else
 			emit(scr, TOK_ERROR, ERR_UNKOWN);
 
+		scr->column++;
 		return lexany(scr);
 	}
 
@@ -199,8 +200,10 @@ lexany(void *pscr)
 void*
 lexspace(scanner *scr)
 {
-	while (isspace(peekch(scr)))
+	while (isspace(peekch(scr))) {
 		nextch(scr);
+		scr->column++;
+	}
 
 	ignore(scr);
 	return lexany(scr);
@@ -219,11 +222,13 @@ lexspace(scanner *scr)
 void*
 lexstate(scanner *scr)
 {
-	int value;
+	int value, col;
 	size_t len;
 
+	col = scr->column;
 	while (isdigit(peekch(scr)))
 		nextch(scr);
+	scr->column = col;
 
 	len = scr->pos - scr->start;
 	char dest[len];
@@ -238,6 +243,8 @@ lexstate(scanner *scr)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
 
 	emit(scr, TOK_STATE, value);
+	scr->column += len - 1;
+
 	return lexany(scr);
 }
 
@@ -257,14 +264,16 @@ lexterm(scanner *scr, char *ter, toktype tkt)
 	size_t len;
 
 	len = strlen(ter);
-	if (strncmp(ter, &scr->input[scr->start], len))
+	if (strncmp(ter, &scr->input[scr->start], len)) {
 		emit(scr, TOK_ERROR, ERR_UNEXPECTED);
-	else
+	} else {
 		emit(scr, tkt, TOKNOP);
+	}
 
 	scr->pos += len;
 	scr->start = scr->pos;
 
+	scr->column += len;
 	return lexany(scr);
 }
 

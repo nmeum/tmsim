@@ -35,6 +35,12 @@ struct _parser {
 	token *prevtok;
 
 	/**
+	 * Current token, stored here instead in order to extract line and
+	 * column information form the token when the user requests an error string.
+	 */
+	token *tok;
+
+	/**
 	 * Underlying scanner for this parser.
 	 */
 	scanner *scr;
@@ -57,7 +63,7 @@ typedef enum {
 	PAR_ACCEPTKEY,		/**< Parser didn't encounter 'accept:' keyword. */
 	PAR_TOOMANYACCEPT,	/**< Amount of accepting states exceeds MAXACCEPT. */
 	PAR_ACCEPTSTATE,	/**< Accepting state list was empty. */
-	PAR_MISSINGCOMMA,	/**< Missing ',' in accept list. */
+	PAR_NONSTATEACCEPT,	/**< Accepting state list contains a non-state token. */
 
 	PAR_STATEDEF,           /**< Expected statename for state definition. */
 	PAR_LBRACKET,		/**< Missing opening left bracket in state definition. */
@@ -73,3 +79,4 @@ typedef enum {
 parser *newparser(char*);
 parerr parsetm(parser*, dtm*);
 void freeparser(parser*);
+int strparerr(parser*, parerr, char*, FILE*);

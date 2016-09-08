@@ -36,7 +36,7 @@
 int
 main(int argc, char **argv)
 {
-	int ret;
+	parerr ret;
 	dtm *tm;
 	parser *par;
 	FILE *fd;
@@ -68,8 +68,8 @@ main(int argc, char **argv)
 	par = newparser(fc);
 
 	tm = newtm();
-	if ((ret = parsetm(par, tm) != PAR_OK)) {
-		fprintf(stderr, "ERROR CODE: %d\n", ret);
+	if ((ret = parsetm(par, tm)) != PAR_OK) {
+		strparerr(par, ret, fp, stdout);
 		return 1;
 	}
 
