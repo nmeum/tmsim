@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <semaphore.h>
+#include <stddef.h>
 
 #include "util.h"
 #include "token.h"
@@ -335,4 +336,42 @@ token*
 nexttoken(scanner *scr)
 {
 	return dequeue(scr->tqueue);
+}
+
+/**
+ * Returns the content of the line with the given line number.
+ *
+ * @pre Line must be greater than 0.
+ * @param scr Scanner to extract line from.
+ * @param line Line number.
+ * @return -1 if the line number doesn't exist, 0 otherwise.
+ */
+char*
+linenum(scanner *scr, int line)
+{
+	char *c1, *c2, *res;
+	ptrdiff_t p1, p2;
+	size_t len;
+
+	assert(line >= 1);
+
+	p1 = 0;
+	while ((c1 = strchr(&scr->input[p1], '\n'))) {
+		if (--line == 0) {
+			if ((c2 = strchr(&scr->input[p1], '\n'))) {
+				p2 = c2 - scr->input + 1;
+				len = p2 - p1;
+			} else {
+				len = scr->inlen - p1;
+			}
+
+			res = estrndup(&scr->input[p1], len - 1);
+			res[len - 1] = '\0'; /* Overwrite newline. */
+			return res;
+		}
+
+		p1 = c1 - scr->input + 1;
+	}
+
+	return NULL;
 }

@@ -102,6 +102,39 @@ newparser(char *str)
 }
 
 /**
+ * Returns a string which 'marks' the given position in the given
+ * string. Meaning it returns a string which is excactly as long as the
+ * first 'pos' characters of the given string when printed to a terminal
+ * (tab characters will be retained, all other characters will be
+ * replaced by the tilde character). The last character (ignoring the
+ * null byte) of this returned string is '^' and will thus point to the
+ * character at 'pos' in the original string if the two string are
+ * printed to a terminal seperated by a newline character.
+ *
+ * @pre The length of the given string must be equal or greater than pos.
+ * @param pos Position of the character in the given string the
+ * 	returned string should point to.
+ * @param str String to create marker for.
+ * @retruns Marker for the given string as described above.
+ */
+char*
+mark(int pos, char *str)
+{
+	char *res;
+
+	res = estrndup(str, pos);
+	for (int i = 0; i < pos; i++) {
+		if (res[i] != '\t')
+			res[i] = '~';
+	}
+
+	res[pos - 1] = '^';
+	res[pos] = '\0';
+
+	return res;
+}
+
+/**
  * Formats a parerr as a string and includes line and column information
  * where the error (presumably) ocurred. The string is directly written
  * to the given stream.
@@ -116,8 +149,9 @@ newparser(char *str)
 int
 strparerr(parser *par, parerr err, char *fn, FILE *stream)
 {
+	int r;
 	token *tok;
-	char *msg;
+	char *msg, *line, *marker;
 
 	assert(err != PAR_OK);
 	tok = par->tok;
@@ -164,9 +198,9 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 			"for the same input symbol.";
 		break;
 	case PAR_STARTKEY:
-		msg = "An initial state was defined. Please define it "
+		msg = "An initial state wasn't defined. Please define it "
 			"using the 'start:' keyword.";
-		break;
+		return fprintf(stream, "%s: %s\n", fn, msg);
 	case PAR_INITALSTATE:
 		msg = "The initial state value cannot be left empty.";
 		break;
@@ -174,18 +208,14 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 		msg = "Accepting states where not defined. Please define "
 			"one or more accepting states using the "
 			"'accept:' keyword.";
-		break;
+		return fprintf(stream, "%s: %s\n", fn, msg);
 	case PAR_TOOMANYACCEPT:
 		msg = "You defined too many accepting states, the maximum "
 			"number of accepting states is hard-coded.";
 		break;
-	case PAR_ACCEPTSTATE:
-		msg = "You need to define at least one accepting states.";
-		break;
 	case PAR_NONSTATEACCEPT:
 		msg = "Your accepting state list contains a token which is "
-			"not a state name. The list can only consist of "
-			"valid state names.";
+			"not a state name or is empty.";
 		break;
 	case PAR_STATEDEF:
 		msg = "Expected a state definition but didn't find a valid "
@@ -194,13 +224,11 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 		break;
 	case PAR_LBRACKET:
 		msg = "The parser expected an opening curly bracket as a "
-			"part of this state definition but found a "
-			"different symbol.";
+			"part of this state definition.";
 		break;
 	case PAR_RBRACKET:
 		msg = "The parser expected a closing curly bracket as a "
-			"part of this state definition but found a "
-			"different symbol.";
+			"part of this state definition.";
 		break;
 	case PAR_RSYMBOL:
 		msg = "Your transition definition is missing a symbol "
@@ -233,8 +261,19 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	}
 
 ret:
-	return fprintf(stream, "%s:%d:%d: %s\n", fn, tok->line,
-			tok->column, msg);
+	if (!(line = linenum(par->scr, tok->line))) {
+		msg = "Current token contains an invalid line number. "
+			"This is a bug, please consider reporting it.";
+		return fprintf(stream, "%s\n", msg);
+	}
+
+	marker = mark(tok->column, line);
+	r = fprintf(stream, "%s:%d:%d: %s\n %s\n %s\n", fn, tok->line,
+			tok->column, msg, line, marker);
+
+	free(line);
+	free(marker);
+	return r;
 }
 
 /**

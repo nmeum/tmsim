@@ -42,6 +42,24 @@ estrdup(char *s) {
 }
 
 /**
+ * Calls estrndup(3) but terminates the program EXIT_FAILURE if strndup returned
+ * an error.
+ *
+ * @param s Pointer to a string which should be duplicated.
+ * @param n Amount of bytes to copy.
+ * @returns Pointer to a new string which is a duplicate of the given one.
+ */
+char*
+estrndup(char *s, size_t n) {
+	char *r;
+
+	if (!(r = strndup(s, n)))
+		die("strndup failed");
+
+	return r;
+}
+
+/**
  * Calls malloc(3) but terminates the program with EXIT_FAILURE if malloc
  * returned an error.
  *

@@ -62,7 +62,6 @@ typedef enum {
 
 	PAR_ACCEPTKEY,		/**< Parser didn't encounter 'accept:' keyword. */
 	PAR_TOOMANYACCEPT,	/**< Amount of accepting states exceeds MAXACCEPT. */
-	PAR_ACCEPTSTATE,	/**< Accepting state list was empty. */
 	PAR_NONSTATEACCEPT,	/**< Accepting state list contains a non-state token. */
 
 	PAR_STATEDEF,           /**< Expected statename for state definition. */

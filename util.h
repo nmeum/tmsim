@@ -25,6 +25,7 @@
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 char *estrdup(char *s);
+char *estrndup(char *s, size_t n);
 void *emalloc(size_t size);
 
 void pthread_spin_elock(pthread_spinlock_t*);

@@ -60,3 +60,4 @@ struct _scanner {
 scanner *scanstr(char*);
 token *nexttoken(scanner*);
 void freescanner(scanner*);
+char* linenum(scanner*, int);
