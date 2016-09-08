@@ -382,18 +382,18 @@ compute(dtm *tm, tmstate *state)
 
 	tm->tape->next->value = trans.symbol;
 	switch (trans.headdir) {
-		case RIGHT:
-			tm->tape = tm->tape->next;
-			break;
-		case LEFT:
-			if (!tm->tape->prev)
-				tm->tape->prev = newtapeentry(BLANKCHAR,
-					NULL, tm->tape);
-			tm->tape = tm->tape->prev;
-			break;
-		case STAY:
-			/* Nothing to do here. */
-			break;
+	case RIGHT:
+		tm->tape = tm->tape->next;
+		break;
+	case LEFT:
+		if (!tm->tape->prev)
+			tm->tape->prev = newtapeentry(BLANKCHAR,
+				NULL, tm->tape);
+		tm->tape = tm->tape->prev;
+		break;
+	case STAY:
+		/* Nothing to do here. */
+		break;
 	}
 
 	if (getstate(tm, trans.nextstate, &next))
