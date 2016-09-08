@@ -168,7 +168,7 @@ parsemeta(parser *par, dtm *dest)
 	if (i <= 0)
 		return PAR_ACCEPTSTATE;
 	else
-		dest->acceptsiz = ++i;
+		dest->acceptsiz = i;
 
 	return PAR_OK;
 }
