@@ -1,7 +1,7 @@
 tmsim
 =====
 
-A turing machine simulator with graphviz export functionality.
+A buggy turing machine simulator (work in progress).
 
 Dependencies
 ============
@@ -10,7 +10,6 @@ The following software is required to build tmsim:
 
 	- GNU make
 	- C99 compiler (e.g. gcc)
-	- graphviz (optional)
 
 Building
 ========
@@ -18,10 +17,6 @@ Building
 If you installed all dependencies build tmsim the following way:
 
 	$ make
-
-In case you don't want the graphviz export functionality:
-
-	$ GRAPHVIZ=0 make
 
 Format
 ======
@@ -47,11 +42,7 @@ The following EBNF describes valid tmsim input:
 Documentation
 =============
 
-End user documentation (meaning man pages in the mdoc format) can be
-found in `docs/`. In addition to that a few examples are provided in the
-`examples/` directory.
-
-Besides the entire code base is documented with comments that can be
+The entire code base is documented with comments that can be
 parsed by Doxygen. A Doxyfile is not provided but if you are into that
 sort of thing you can use Doxygen to generate some source code
 documentation.
