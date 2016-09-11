@@ -363,12 +363,12 @@ parsemeta(parser *par, dtm *dest)
  * @return Error code or PAR_OK if no error was encountered.
  */
 parerr
-parsetrans(parser *par, int *rsym, tmtrans *dest)
+parsetrans(parser *par, tmtrans *dest)
 {
 	par->tok = next(par);
 	if (par->tok->type != TOK_SYMBOL)
 		return PAR_RSYMBOL;
-	*rsym = par->tok->value;
+	dest->rsym = par->tok->value;
 
 	par->tok = next(par);
 	switch (par->tok->type) {
@@ -388,7 +388,7 @@ parsetrans(parser *par, int *rsym, tmtrans *dest)
 	par->tok = next(par);
 	if (par->tok->type != TOK_SYMBOL)
 		return PAR_WSYMBOL;
-	dest->symbol = par->tok->value;
+	dest->wsym = par->tok->value;
 
 	par->tok = next(par);
 	if (par->tok->type != TOK_NEXT)
@@ -419,7 +419,6 @@ parsetrans(parser *par, int *rsym, tmtrans *dest)
 parerr
 parsestate(parser *par, tmstate *dest)
 {
-	int rsym;
 	tmtrans *trans;
 	token *t;
 	parerr ret;
@@ -435,12 +434,12 @@ parsestate(parser *par, tmstate *dest)
 
 	while ((t = peek(par))->type != TOK_RBRACKET) {
 		trans = emalloc(sizeof(tmtrans));
-		if ((ret = parsetrans(par, &rsym, trans)) != PAR_OK) {
+		if ((ret = parsetrans(par, trans)) != PAR_OK) {
 			free(trans);
 			return ret;
 		}
 
-		if (addtrans(dest, rsym, trans)) {
+		if (addtrans(dest, trans)) {
 			free(trans);
 			return PAR_TRANSDEFTWICE;
 		}

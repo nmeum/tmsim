@@ -271,17 +271,16 @@ getstate(dtm *tm, int name, tmstate *dest)
  * Adds a transition to an existing turing maschine state.
  *
  * @param state State to which a new transition should be added.
- * @param sym Symbol which triggers this tranisition.
  * @param trans Pointer to the transition which should be added to the state.
  * @returns -1 if a state with the given symbol already exists, 0 otherwise.
  */
 int
-addtrans(tmstate *state, int sym, tmtrans *trans)
+addtrans(tmstate *state, tmtrans *trans)
 {
 	int ret;
 	mapentry *entry;
 
-	entry = newmapentry(sym);
+	entry = newmapentry(trans->rsym);
 	entry->data.trans = trans;
 
 	if ((ret = setval(state->trans, entry)))
@@ -294,17 +293,17 @@ addtrans(tmstate *state, int sym, tmtrans *trans)
  * Retrieves a transition from an existing turing state.
  *
  * @param state State from which a transition should be extracted.
- * @param sym Symbol which triggers the tranisition.
+ * @param rsym Symbol which triggers the tranisition.
  * @param dest Pointer to a transition which should be used for storing the result.
  * @returns -1 if a tranisition with the given symbol doesn't exist, 0 otherwise.
  */
 int
-gettrans(tmstate *state, int sym, tmtrans *dest)
+gettrans(tmstate *state, int rsym, tmtrans *dest)
 {
 	int ret;
 	mapentry entry;
 
-	if ((ret = getval(state->trans, sym, &entry)))
+	if ((ret = getval(state->trans, rsym, &entry)))
 		return ret;
 
 	*dest = *entry.data.trans;
@@ -391,7 +390,7 @@ compute(dtm *tm, tmstate *state)
 	if (gettrans(state, in, &trans))
 		return isaccepting(tm, state->name);
 
-	tm->tape->next->value = trans.symbol;
+	tm->tape->next->value = trans.wsym;
 	switch (trans.headdir) {
 	case RIGHT:
 		tm->tape = tm->tape->next;
