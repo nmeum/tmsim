@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <semaphore.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,6 +34,43 @@
 #include "turing.h"
 #include "parser.h"
 
+void
+exporttrans(tmtrans *trans, tmstate *state, void *arg)
+{
+	FILE *stream = (FILE*)arg;
+
+	fprintf(stream, "q%d -> q%d [label=\"%c/%c/%c\"];\n",
+		state->name, trans->nextstate,
+		trans->rsym, trans->wsym,
+		dirstr(trans->headdir));
+}
+
+void
+exportstate(tmstate *state, void *arg)
+{
+	FILE *stream = (FILE*)arg;
+
+	eachtrans(state, exporttrans, stream);
+}
+
+void
+export(dtm *tm, FILE *stream)
+{
+
+	fprintf(stream, "digraph G {\nrankdir = \"LR\";\n\n");
+
+	fprintf(stream, "node [shape = %s];\n", "diamond");
+	fprintf(stream, "q%d;\n", tm->start);
+
+	fprintf(stream, "\nnode [shape = %s];\n", "doublecircle");
+	for (int i = 0; i < tm->acceptsiz; i++)
+		fprintf(stream, "q%d;\n", tm->accept[i]);
+
+	fprintf(stream, "\nnode [shape = %s];\n", "circle");
+	eachstate(tm, exportstate, stream);
+	fprintf(stream, "}\n");
+}
+
 int
 main(int argc, char **argv)
 {
@@ -40,17 +78,21 @@ main(int argc, char **argv)
 	dtm *tm;
 	parser *par;
 	FILE *fd;
-	char *fc, *fp, *in;
+	char *fc, *fp, *in, *prog;
 	struct stat st;
 
-	if (argc <= 2) {
-		fprintf(stderr, "USAGE: %s FILE INPUT\n", argv[0]);
+	prog = argv[0];
+	if (strcmp(prog, "tmsim-export")) {
+		if (argc <= 1) {
+			fprintf(stderr, "USAGE: %s FILE\n", prog);
+			return 1;
+		}
+	} else if (argc <= 2) {
+		fprintf(stderr, "USAGE: %s FILE INPUT\n", prog);
 		return 1;
 	}
 
 	fp = argv[1];
-	in = argv[2];
-
 	if (stat(fp, &st))
 		die("stat failed");
 	else
@@ -75,6 +117,13 @@ main(int argc, char **argv)
 
 	free(fc);
 	freeparser(par);
+
+	if (strcmp(argv[0], "tmsim-export")) {
+		export(tm, stdout);
+		return 0;
+	} else {
+		in = argv[2];
+	}
 
 	writetape(tm, in);
 	if (runtm(tm))

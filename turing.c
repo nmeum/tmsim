@@ -459,14 +459,14 @@ eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
  * @param arg Additional argument passed to the function.
  */
 void
-eachtrans(tmstate *state, void (*fn)(tmtrans*, void*), void *arg)
+eachtrans(tmstate *state, void (*fn)(tmtrans*, tmstate*, void*), void *arg)
 {
 	tmmap *map;
 	mapentry *elem;
 
 	map = state->trans;
 	MAP_FOREACH(map, elem)
-		(*fn)(elem->data.trans, arg);
+		(*fn)(elem->data.trans, state, arg);
 }
 
 /**
