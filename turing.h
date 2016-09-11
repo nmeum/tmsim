@@ -139,3 +139,4 @@ void eachstate(dtm*, void (*fn)(tmstate*, void*), void*);
 void eachtrans(tmstate*, void(*fn)(tmtrans*, void*), void*);
 
 int runtm(dtm*);
+char dirstr(direction);

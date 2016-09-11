@@ -468,3 +468,25 @@ eachtrans(tmstate *state, void (*fn)(tmtrans*, void*), void *arg)
 	MAP_FOREACH(map, elem)
 		(*fn)(elem->data.trans, arg);
 }
+
+/**
+ * Returns a char representation for a head direction.
+ *
+ * @param direction Head direction which should be converted.
+ * @return Char describing the direction.
+ */
+char
+dirstr(direction dir)
+{
+	switch (dir) {
+	case RIGHT:
+		return 'r';
+	case LEFT:
+		return 'l';
+	case STAY:
+		return 'n';
+	}
+
+	/* Never reached. */
+	return -1;
+}
