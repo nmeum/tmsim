@@ -20,7 +20,7 @@ enum {
 	STATEMAPSIZ = 512,	/**< Amount of buckets in the state map. */
 	TRANSMAPSIZ = 256,	/**< Amount of buckets in the transition map. */
 	MAXACCEPT = 512,	/**< Max amount of items in the accept state array. */
-	BLANKCHAR = '_',	/**< Character used to represent blanks on the tape. */
+	BLANKCHAR = '$',	/**< Character used to represent blanks on the tape. */
 };
 
 /**

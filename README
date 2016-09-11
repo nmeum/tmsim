@@ -36,7 +36,7 @@ The following EBNF describes valid tmsim input:
 	transitions = transition, ";", { transition, ";" };
 	transition = symbol, direction, symbol, "=>", statename;
 
-	symbol = digit | letter | "_";
+	symbol = digit | letter | "$";
 	direction = ">" | "|" | "<";
 
 Documentation
