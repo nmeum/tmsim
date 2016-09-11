@@ -130,4 +130,7 @@ int getstate(dtm*, int, tmstate*);
 void writetape(dtm*, char*);
 void readtape(dtm*, char*);
 
+void eachstate(dtm*, void (*fn)(tmstate*, void*), void*);
+void eachtrans(tmstate*, void(*fn)(tmtrans*, void*), void*);
+
 int runtm(dtm*);

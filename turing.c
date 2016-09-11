@@ -26,6 +26,17 @@
 #include "turing.h"
 
 /**
+ * Macro used to iterate over all entries of a tmmap.
+ *
+ * @param MAP Pointer to a tmmap to iterate over.
+ * @param VARNAME Variable name used for current item.
+ */
+#define MAP_FOREACH(MAP, VARNAME) \
+	for (int i = 0; i < MAP->size; i++) \
+		for (VARNAME = MAP->entries[i]; \
+			VARNAME; VARNAME = VARNAME->next) \
+
+/**
  * Allocates memory for a tmmap and initializes it.
  *
  * @param size Amount of buckets that should be used.
@@ -419,4 +430,42 @@ runtm(dtm *tm)
 		return isaccepting(tm, tm->start);
 
 	return compute(tm, &start);
+}
+
+/**
+ * Iterates over each state of the given turing machine and
+ * invokes the given function for that state.
+ *
+ * @param tm Turing machine to iterate over.
+ * @param fn Function to invoke for each state.
+ * @param arg Additional argument to passed to the function.
+ */
+void
+eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
+{
+	tmmap *map;
+	mapentry *elem;
+
+	map = tm->states;
+	MAP_FOREACH(map, elem)
+		(*fn)(elem->data.state, arg);
+}
+
+/**
+ * Iterates over each transition of the given state and invokes
+ * the given function for that transition
+ *
+ * @param state Turing state to iterate over.
+ * @param fn Function to invoke for each state.
+ * @param arg Additional argument passed to the function.
+ */
+void
+eachtrans(tmstate *state, void (*fn)(tmtrans*, void*), void *arg)
+{
+	tmmap *map;
+	mapentry *elem;
+
+	map = state->trans;
+	MAP_FOREACH(map, elem)
+		(*fn)(elem->data.trans, arg);
 }
