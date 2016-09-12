@@ -162,11 +162,11 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 		switch (tok->value) {
 		case ERR_OVERFLOW:
 			msg = "Integer overflow while converting "
-				"a numeric state name to a string.";
+				"a numeric state name to an int";
 			goto ret;
 		case ERR_UNDERFLOW:
 			msg = "Integer underflow while converting "
-				"a numeric state name to a string.";
+				"a numeric state name to an int.";
 			goto ret;
 		case ERR_UNKOWN:
 			msg = "Lexer encountered an unkown character.";
