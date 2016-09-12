@@ -23,6 +23,7 @@
 #include <semaphore.h>
 #include <unistd.h>
 #include <string.h>
+#include <libgen.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,6 +34,8 @@
 #include "scanner.h"
 #include "turing.h"
 #include "parser.h"
+
+static char *prog;
 
 void
 exporttrans(tmtrans *trans, tmstate *state, void *arg)
@@ -71,42 +74,56 @@ export(dtm *tm, FILE *stream)
 	fprintf(stream, "}\n");
 }
 
+char*
+readfile(char *fp)
+{
+	FILE *fd;
+	char *fc;
+	struct stat st;
+
+	if (stat(fp, &st))
+		return NULL;
+	else
+		fc = emalloc(st.st_size + 1);
+
+	if (!(fd = fopen(fp, "r")))
+		return NULL;
+	if (fread(fc, sizeof(char), st.st_size, fd) != st.st_size)
+		return NULL;
+
+	if (fclose(fd))
+		return NULL;
+
+	fc[st.st_size] = '\0';
+	return fc;
+}
+
+void
+usage(void)
+{
+	if (!strcmp(prog, "tmsim-export"))
+		fprintf(stderr, "USAGE: %s FILE\n", prog);
+	else
+		fprintf(stderr, "USAGE: %s FILE INPUT\n", prog);
+
+	exit(EXIT_FAILURE);
+}
+
 int
 main(int argc, char **argv)
 {
 	parerr ret;
 	dtm *tm;
 	parser *par;
-	FILE *fd;
-	char *fc, *fp, *in, *prog;
-	struct stat st;
+	char *fc, *fp;
 
-	prog = argv[0];
-	if (strcmp(prog, "tmsim-export")) {
-		if (argc <= 1) {
-			fprintf(stderr, "USAGE: %s FILE\n", prog);
-			return 1;
-		}
-	} else if (argc <= 2) {
-		fprintf(stderr, "USAGE: %s FILE INPUT\n", prog);
-		return 1;
-	}
+	prog = basename(argv[0]);
+	if (argc <= 1)
+		usage();
 
 	fp = argv[1];
-	if (stat(fp, &st))
-		die("stat failed");
-	else
-		fc = emalloc(st.st_size + 1);
-
-	if (!(fd = fopen(fp, "r")))
-		die("fopen failed");
-	if (fread(fc, sizeof(char), st.st_size, fd) != st.st_size)
-		die("short read");
-
-	if (fclose(fd))
-		die("fclose failed");
-
-	fc[st.st_size] = '\0';
+	if (!(fc = readfile(fp)))
+		die("couldn't read from input file");
 	par = newparser(fc);
 
 	tm = newtm();
@@ -118,14 +135,14 @@ main(int argc, char **argv)
 	free(fc);
 	freeparser(par);
 
-	if (strcmp(argv[0], "tmsim-export")) {
+	if (!strcmp(prog, "tmsim-export")) {
 		export(tm, stdout);
 		return 0;
-	} else {
-		in = argv[2];
+	} else if (argc <= 2) {
+		usage();
 	}
 
-	writetape(tm, in);
+	writetape(tm, argv[2]);
 	if (runtm(tm))
 		return 1;
 	else
