@@ -105,8 +105,7 @@ newparser(char *str)
  * Returns a string which 'marks' the given position in the given
  * string. Meaning it returns a string which is excactly as long as the
  * first 'pos' characters of the given string when printed to a terminal
- * (tab characters will be retained, all other characters will be
- * replaced by the tilde character). The last character (ignoring the
+ * (tab characters will be retained. The last character (ignoring the
  * null byte) of this returned string is '^' and will thus point to the
  * character at 'pos' in the original string if the two string are
  * printed to a terminal seperated by a newline character.
@@ -125,7 +124,7 @@ mark(int pos, char *str)
 	res = estrndup(str, pos);
 	for (int i = 0; i < pos; i++) {
 		if (res[i] != '\t')
-			res[i] = '~';
+			res[i] = ' ';
 	}
 
 	res[pos - 1] = '^';
