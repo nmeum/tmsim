@@ -39,6 +39,9 @@ The following EBNF describes valid tmsim input:
 	symbol = digit | letter | "$";
 	direction = ">" | "|" | "<";
 
+Besides a comment can be added anywhere in the tmsim input file.
+Comments begin with the ASCII character '#' and end with a newline.
+
 Documentation
 =============
 

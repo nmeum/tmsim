@@ -33,6 +33,7 @@
 #include "turing.h"
 
 void *lexspace(scanner*);
+void *lexcomment(scanner*);
 void *lexstate(scanner*);
 void *lexterm(scanner*, char*, toktype);
 
@@ -138,6 +139,8 @@ lexany(void *pscr)
 		scr->line++;
 		ignore(scr);
 		return lexany(scr);
+	case '#':
+		return lexcomment(scr);
 	case ',':
 		emit(scr, TOK_COMMA, TOKAUTO);
 		return lexany(scr);
@@ -204,6 +207,28 @@ lexspace(scanner *scr)
 	while (isspace(peekch(scr))) {
 		nextch(scr);
 		scr->column++;
+	}
+
+	ignore(scr);
+	return lexany(scr);
+}
+
+/**
+ * Skips/Ignores a comment. A comment begins with the
+ * ASCII symbol '#' and ends with a newline.
+ *
+ * @param scr Pointer to the associated scanner.
+ * @returns A null pointer.
+ */
+void*
+lexcomment(scanner *scr) {
+	while (peekch(scr) != '\n') {
+		nextch(scr);
+
+		/* We don't need to increment scr->column here because
+		 * comments are currently not exposed to the parser
+		 * and since they end with a newline they don't effect
+		 * other tokens either (unlike white-spaces). */
 	}
 
 	ignore(scr);
