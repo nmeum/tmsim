@@ -127,6 +127,9 @@ lexany(void *pscr)
 	char nxt;
 	scanner *scr = (scanner*)pscr;
 
+	/* Make this function a cancel point. */
+	pthread_testcancel();
+
 	scr->column++;
 	if ((nxt = nextch(scr)) == -1) {
 		emit(scr, TOK_EOF, TOKNOP);
@@ -341,8 +344,10 @@ freescanner(scanner *scr)
 {
 	assert(scr);
 
-	if (!pthread_cancel(*scr->thread))
-		die("pthread_cancel failed");
+	if (!pthread_cancel(*scr->thread)) {
+		if (pthread_join(*scr->thread, NULL))
+			die("pthread_join failed");
+	}
 
 	free(scr->thread);
 	freequeue(scr->tqueue);
