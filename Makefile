@@ -8,7 +8,7 @@ CFLAGS ?= -O0 -g -pedantic -Wall -Werror
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\"
 
 CC      ?= gcc
-LDFLAGS ?= -pthread
+LDFLAGS += -pthread
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)
