@@ -1,7 +1,7 @@
 PREFIX   ?= /usr/local
-BIN_NAME ?= tmsim
+PROGS     = tmsim tmsim-export
 
-OBJECTS = tmsim.o scanner.o parser.o turing.o token.o queue.o util.o
+OBJECTS = scanner.o parser.o turing.o token.o queue.o util.o
 HEADERS = scanner.h parser.h turing.h token.h queue.h util.h
 
 CFLAGS ?= -O0 -g -pedantic -Wall -Werror
@@ -13,8 +13,10 @@ LDFLAGS ?= -pthread
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-all: $(BIN_NAME)
-$(BIN_NAME): $(OBJECTS)
+all: $(PROGS)
+tmsim: $(OBJECTS) tmsim.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+tmsim-export: $(OBJECTS) export.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:

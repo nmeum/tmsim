@@ -28,6 +28,43 @@
 #include "turing.h"
 #include "parser.h"
 
+void
+exporttrans(tmtrans *trans, tmstate *state, void *arg)
+{
+	FILE *stream = (FILE*)arg;
+
+	fprintf(stream, "q%d -> q%d [label=\"%c/%c/%c\"];\n",
+		state->name, trans->nextstate,
+		trans->rsym, trans->wsym,
+		dirstr(trans->headdir));
+}
+
+void
+exportstate(tmstate *state, void *arg)
+{
+	FILE *stream = (FILE*)arg;
+
+	eachtrans(state, exporttrans, stream);
+}
+
+void
+export(dtm *tm, FILE *stream)
+{
+
+	fprintf(stream, "digraph G {\nrankdir = \"LR\";\n\n");
+
+	fprintf(stream, "node [shape = %s];\n", "diamond");
+	fprintf(stream, "q%d;\n", tm->start);
+
+	fprintf(stream, "\nnode [shape = %s];\n", "doublecircle");
+	for (int i = 0; i < tm->acceptsiz; i++)
+		fprintf(stream, "q%d;\n", tm->accept[i]);
+
+	fprintf(stream, "\nnode [shape = %s];\n", "circle");
+	eachstate(tm, exportstate, stream);
+	fprintf(stream, "}\n");
+}
+
 int
 main(int argc, char **argv)
 {
@@ -37,7 +74,7 @@ main(int argc, char **argv)
 	char *fc, *fp;
 
 	if (argc <= 1) {
-		fprintf(stderr, "USAGE: %s FILE [INPUT]\n", argv[0]);
+		fprintf(stderr, "USAGE: %s FILE\n", argv[0]);
 		return 1;
 	}
 
@@ -52,15 +89,9 @@ main(int argc, char **argv)
 		return 1;
 	}
 
-	if (argc <= 2)
-		return 0;
-
 	free(fc);
 	freeparser(par);
 
-	writetape(tm, argv[2]);
-	if (runtm(tm))
-		return 1;
-	else
-		return 0;
+	export(tm, stdout);
+	return 0;
 }

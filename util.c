@@ -21,6 +21,10 @@
 #include <string.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "util.h"
 
@@ -49,6 +53,41 @@ xstrncmp(char *s1, char *s2, size_t n)
 
 	return (*s1 == *s2) ? -1 : i;
 }
+
+/**
+ * Reads the content of the given file at the given path and returns a
+ * pointer to a newly allocated string containing the content.
+ *
+ * @param Path to file which should be read.
+ * @returns Pointer to a string containing the content of the given file.
+ * 	If an error occured while trying to read the given file NULL is
+ * 	returned and errno is set to indicate the error.
+ */
+char*
+readfile(char *fp)
+{
+	FILE *fd;
+	char *fc;
+	struct stat st;
+
+	if (stat(fp, &st))
+		return NULL;
+	else
+		fc = emalloc(st.st_size + 1);
+
+	if (!(fd = fopen(fp, "r")))
+		return NULL;
+	if (fread(fc, sizeof(char), st.st_size, fd) != st.st_size)
+		return NULL;
+
+	if (fclose(fd))
+		return NULL;
+
+	fc[st.st_size] = '\0';
+	return fc;
+}
+
+
 
 /**
  * Calls estrndup(3) but terminates the program EXIT_FAILURE if strndup returned
