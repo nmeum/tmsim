@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <semaphore.h>
+#include <unistd.h>
 
 #include "util.h"
 #include "token.h"
@@ -27,6 +28,10 @@
 #include "scanner.h"
 #include "turing.h"
 #include "parser.h"
+
+static char *nodeshape = "circle";
+static char *initialshape = "diamond";
+static char *acceptingshape = "doublecircle";
 
 void
 exporttrans(tmtrans *trans, tmstate *state, void *arg)
@@ -53,32 +58,66 @@ export(dtm *tm, FILE *stream)
 
 	fprintf(stream, "digraph G {\nrankdir = \"LR\";\n\n");
 
-	fprintf(stream, "node [shape = %s];\n", "diamond");
+	fprintf(stream, "node [shape = %s];\n", initialshape);
 	fprintf(stream, "q%d;\n", tm->start);
 
-	fprintf(stream, "\nnode [shape = %s];\n", "doublecircle");
+	fprintf(stream, "\nnode [shape = %s];\n", acceptingshape);
 	for (int i = 0; i < tm->acceptsiz; i++)
 		fprintf(stream, "q%d;\n", tm->accept[i]);
 
-	fprintf(stream, "\nnode [shape = %s];\n", "circle");
+	fprintf(stream, "\nnode [shape = %s];\n", nodeshape);
 	eachstate(tm, exportstate, stream);
 	fprintf(stream, "}\n");
+}
+
+void
+usage(char *prog)
+{
+	char *usage = "[-s nodeshape] [-i initialshape]\n"
+		"\t[-a acceptingshape] [-o path] [-h|-v] FILE";
+
+	fprintf(stderr, "USAGE: %s %s\n", prog, usage);
+	exit(EXIT_FAILURE);
 }
 
 int
 main(int argc, char **argv)
 {
+	int opt;
 	parerr ret;
 	dtm *tm;
 	parser *par;
 	char *fc, *fp;
+	FILE *ofd = stdout;
 
-	if (argc <= 1) {
-		fprintf(stderr, "USAGE: %s FILE\n", argv[0]);
-		return 1;
+	while ((opt = getopt(argc, argv, "s:i:a:o:hv")) != -1) {
+		switch (opt) {
+		case 's':
+			nodeshape = optarg;
+			break;
+		case 'i':
+			initialshape = optarg;
+			break;
+		case 'a':
+			acceptingshape = optarg;
+			break;
+		case 'o':
+			if (!(ofd = fopen(optarg, "w")))
+				die("couldn't open output file");
+			break;
+		case 'v':
+			fprintf(stderr, "tmsim-"VERSION"\n");
+			return 1;
+		case 'h':
+		default:
+			usage(argv[0]);
+		}
 	}
 
-	fp = argv[1];
+	if (argc <= 1 || optind >= argc)
+		usage(argv[0]);
+
+	fp = argv[optind];
 	if (!(fc = readfile(fp)))
 		die("couldn't read from input file");
 	par = newparser(fc);
@@ -92,6 +131,6 @@ main(int argc, char **argv)
 	free(fc);
 	freeparser(par);
 
-	export(tm, stdout);
+	export(tm, ofd);
 	return 0;
 }

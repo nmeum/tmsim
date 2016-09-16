@@ -1,11 +1,11 @@
-PREFIX   ?= /usr/local
-PROGS     = tmsim tmsim-export
+VERSION = 0.5
+PROGS   = tmsim tmsim-export
 
 OBJECTS = scanner.o parser.o turing.o token.o queue.o util.o
-HEADERS = scanner.h parser.h turing.h token.h queue.h util.h
+HEADERS = $(OBJECTS:.o=.h)
 
 CFLAGS ?= -O0 -g -pedantic -Wall -Werror
-CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L
+CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\"
 
 CC      ?= gcc
 LDFLAGS ?= -pthread
