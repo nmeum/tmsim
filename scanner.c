@@ -251,18 +251,21 @@ lexcomment(scanner *scr) {
 void*
 lexstate(scanner *scr)
 {
+	char *input;
 	int value, col;
 	size_t len;
+
+	input = &scr->input[scr->pos];
 
 	col = scr->column;
 	while (isdigit(peekch(scr)))
 		nextch(scr);
 	scr->column = col;
 
-	len = scr->pos - scr->start;
+	len = scr->pos - scr->start - 1;
 	char dest[len];
 
-	strncpy(dest, &scr->input[scr->pos - 1], len);
+	strncpy(dest, input, len);
 	dest[len] = '\0';
 
 	value = strtol(dest, NULL, 10);
