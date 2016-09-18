@@ -29,10 +29,30 @@
 #include "turing.h"
 #include "parser.h"
 
+/**
+ * Shape used for normal states. Normal states are all states that are
+ * neither an accepting nor an initial state.
+ */
 static char *nodeshape = "circle";
+
+/**
+ * Shape used for the initial node.
+ */
 static char *initialshape = "diamond";
+
+/**
+ * Shape used for the accepting nodes.
+ */
 static char *acceptingshape = "doublecircle";
 
+/**
+ * Writes the dot language reprasentation for a given transition
+ * from a given state to a given stream.
+ *
+ * @param trans Transition to create dot markup for.
+ * @param state State the transition belongs to.
+ * @param arg Void pointer to a stream the output should be written to.
+ */
 void
 exporttrans(tmtrans *trans, tmstate *state, void *arg)
 {
@@ -44,6 +64,13 @@ exporttrans(tmtrans *trans, tmstate *state, void *arg)
 		dirstr(trans->headdir));
 }
 
+/**
+ * Writes the dot language reprasentation for a given state
+ * to a given stream.
+ *
+ * @param state State to create dot markup for.
+ * @param arg Void pointer to a stream the output should be written to.
+ */
 void
 exportstate(tmstate *state, void *arg)
 {
@@ -52,6 +79,13 @@ exportstate(tmstate *state, void *arg)
 	eachtrans(state, exporttrans, stream);
 }
 
+/**
+ * Writes the dot language reprasentation for a given turing machine
+ * to a given stream.
+ *
+ * @param tm Turing machine to create dot markup for.
+ * @param stream Stream to write dot markup to.
+ */
 void
 export(dtm *tm, FILE *stream)
 {
@@ -70,6 +104,10 @@ export(dtm *tm, FILE *stream)
 	fprintf(stream, "}\n");
 }
 
+/**
+ * Writes the usage string for this program to stderr and terminates
+ * the programm with EXIT_FAILURE.
+ */
 void
 usage(char *prog)
 {
@@ -80,6 +118,12 @@ usage(char *prog)
 	exit(EXIT_FAILURE);
 }
 
+/**
+ * The main function invoked when the program is started.
+ *
+ * @param argc Amount of command line parameters.
+ * @param argv Command line parameters.
+ */
 int
 main(int argc, char **argv)
 {
