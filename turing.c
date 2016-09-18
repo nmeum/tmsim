@@ -220,7 +220,7 @@ newtm(void)
 	tm = emalloc(sizeof(dtm));
 	tm->states = newtmmap(STATEMAPSIZ);
 	tm->start = tm->acceptsiz = 0;
-	tm->tape = newtapeentry(BLANKCHAR, NULL, NULL);
+	tm->tape = tm->first = newtapeentry(BLANKCHAR, NULL, NULL);
 	return tm;
 }
 
@@ -334,6 +334,8 @@ writetape(dtm *tm, char *str)
 
 /**
  * Reads the string currently stored on the tape of the given turing maschine.
+ * The string starts at the beginnig of the tape and ends as soons as the first
+ * blank character is encountered.
  *
  * @param tm Turing machine whose tape should be read.
  * @param dest Pointer to a buffer where the result should be stored.
@@ -346,7 +348,8 @@ readtape(dtm *tm, char *dest)
 	int i;
 	tapeentry *c;
 
-	for (i = 0, c = tm->tape->next; c; i++, c = c->next)
+	for (i = 0, c = tm->first->next; c &&
+			c->value != BLANKCHAR; i++, c = c->next)
 		dest[i] = c->value;
 	dest[i] = '\0';
 }
