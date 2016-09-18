@@ -30,9 +30,18 @@
 #include "parser.h"
 
 enum {
+	/**
+	 * Maximum size of the string returned by ::readtape. Thus
+	 * corresponding to the maximal number of tape entries printed
+	 * to stdout when the -r flag is used.
+	 */
 	MAXTAPSIZ = 1024 * 5,
 };
 
+/**
+ * Writes the usage string for this program to stderr and terminates
+ * the programm with EXIT_FAILURE.
+ */
 void
 usage(char *prog)
 {
@@ -42,6 +51,12 @@ usage(char *prog)
 	exit(EXIT_FAILURE);
 }
 
+/**
+ * The main function invoked when the program is started.
+ *
+ * @param argc Amount of command line parameters.
+ * @param argv Command line parameters.
+ */
 int
 main(int argc, char **argv)
 {
