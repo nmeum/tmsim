@@ -155,6 +155,7 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	assert(err != PAR_OK);
 	tok = par->tok;
 	assert(tok);
+	msg = "Unkown error.";
 
 	/* Check for scanner error. */
 	if (tok->type == TOK_ERROR) {
