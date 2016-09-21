@@ -322,6 +322,7 @@ writetape(dtm *tm, char *str)
 	tapeentry *ent, *last;
 	char c;
 
+	last = tm->tape;
 	for (tapeentry *i = tm->tape; i; i = i->next)
 		last = i;
 
