@@ -21,6 +21,6 @@ tmsim-export: $(OBJECTS) export.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:
-	$(RM) $(BIN_NAME) $(OBJECTS) export.o tmsim.o
+	$(RM) $(PROGS) $(OBJECTS) export.o tmsim.o
 
 .PHONY: all clean
