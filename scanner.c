@@ -252,7 +252,8 @@ void*
 lexstate(scanner *scr)
 {
 	char *input;
-	int value, col;
+	int col;
+	long value;
 	size_t len;
 
 	input = &scr->input[scr->pos];
@@ -269,12 +270,12 @@ lexstate(scanner *scr)
 	dest[len] = '\0';
 
 	value = strtol(dest, NULL, 10);
-	if (value == LONG_MIN)
+	if (value <= INT_MIN)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
-	else if (value == LONG_MAX)
+	else if (value >= INT_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
 
-	emit(scr, TOK_STATE, value);
+	emit(scr, TOK_STATE, (int)value);
 	scr->column += len - 1;
 
 	return lexany(scr);
