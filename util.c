@@ -29,6 +29,39 @@
 #include "util.h"
 
 /**
+ * Returns a string which 'marks' the given position in the given
+ * string. Meaning it returns a string which is excactly as long as the
+ * first 'pos' characters of the given string when printed to a terminal
+ * (tab characters will be retained. The last character (ignoring the
+ * null byte) of this returned string is '^' and will thus point to the
+ * character at 'pos' in the original string if the two string are
+ * printed to a terminal seperated by a newline character.
+ *
+ * @pre The length of the given string must be equal or greater than pos.
+ * @param pos Position of the character in the given string the
+ * 	returned string should point to. The first element is at
+ * 	position 0 not at position 1.
+ * @param str String to create marker for.
+ * @retruns Marker for the given string as described above.
+ */
+char*
+mark(int pos, char *str)
+{
+	char *res;
+
+	res = estrndup(str, pos);
+	for (int i = 0; i <= pos; i++) {
+		if (res[i] != '\t')
+			res[i] = ' ';
+	}
+
+	res[pos] = '^';
+	res[++pos] = '\0';
+
+	return res;
+}
+
+/**
  * Compares the first 'n' bytes of two strings (like strncmp(3)).
  * However, unlike strncmp(3) it returns the position of the
  * first character that differed.
@@ -51,7 +84,7 @@ xstrncmp(char *s1, char *s2, size_t n)
 		i++;
 	}
 
-	return (*s1 == *s2) ? -1 : i;
+	return (*s1 == *s2) ? -1 : --i;
 }
 
 /**

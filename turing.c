@@ -21,6 +21,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <assert.h>
+#include <ctype.h>
 
 #include "util.h"
 #include "turing.h"
@@ -477,7 +478,7 @@ eachtrans(tmstate *state, void (*fn)(tmtrans*, tmstate*, void*), void *arg)
  * Returns a char representation for a head direction.
  *
  * @param direction Head direction which should be converted.
- * @return Char describing the direction.
+ * @returns Char describing the direction.
  */
 char
 dirstr(direction dir)
@@ -492,5 +493,30 @@ dirstr(direction dir)
 	}
 
 	/* Never reached. */
+	return -1;
+}
+
+/**
+ * Verifies the given input string ensuring that it only consists of
+ * alphanumeric characters and digits. Besides it ensures that it doesn't
+ * contain the special blank symbol.
+ *
+ * @param str Pointer to a string which should be verified.
+ * @returns Position of the first character that wasn't valid or
+ * 	-1 if the given string is a valid input string.
+ */
+int
+verifyinput(char *str)
+{
+	int pos;
+	char ch;
+
+	pos = -1;
+	while ((ch = *str++)) {
+		pos++;
+		if (!((isalpha(ch) || isdigit(ch)) && ch != BLANKCHAR))
+			return pos;
+	}
+
 	return -1;
 }

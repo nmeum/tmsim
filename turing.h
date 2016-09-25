@@ -142,3 +142,4 @@ void eachtrans(tmstate*, void(*fn)(tmtrans*, tmstate*, void*), void*);
 
 int runtm(dtm*);
 char dirstr(direction);
+int verifyinput(char*);

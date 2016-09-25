@@ -40,7 +40,7 @@ enum {
 
 /**
  * Writes the usage string for this program to stderr and terminates
- * the programm with EXIT_FAILURE.
+ * the program with EXIT_FAILURE.
  */
 void
 usage(char *prog)
@@ -48,6 +48,28 @@ usage(char *prog)
 	char *usage = "[-r] [-h|-v] FILE [INPUT]";
 
 	fprintf(stderr, "USAGE: %s %s\n", prog, usage);
+	exit(EXIT_FAILURE);
+}
+
+/**
+ * Writes an input error message to stderr and terminates the program
+ * with EXIT_FAILURE.
+ *
+ * @param str The input string which contained an invalid symbol.
+ * @param pos Position of the first invalid character. The first
+ * 	character is located at position 0 not 1.
+ */
+void
+inputerr(char *str, int pos)
+{
+	char *marker, *msg = "Input can only consist of alphanumeric "
+		"characters\n\tand digits. Besides it can't contain the "
+		"special blank character.";
+
+	marker = mark(pos, str);
+	fprintf(stderr, "Input error at position %d: %s\n %s\n %s\n",
+			++pos, msg, str, marker);
+
 	exit(EXIT_FAILURE);
 }
 
@@ -60,11 +82,11 @@ usage(char *prog)
 int
 main(int argc, char **argv)
 {
-	int ext, rtape;
+	int pos, ext, rtape;
 	parerr ret;
 	dtm *tm;
 	parser *par;
-	char opt, *fc, *fp, tp[MAXTAPSIZ];
+	char opt, *in, *fc, *fp, tp[MAXTAPSIZ];
 
 	rtape = 0;
 	while ((opt = getopt(argc, argv, "rhv")) != -1) {
@@ -101,9 +123,12 @@ main(int argc, char **argv)
 	free(fc);
 	freeparser(par);
 
-	writetape(tm, argv[optind]);
-	ext = (runtm(tm)) ? 1 : 0;
+	in = argv[optind];
+	if ((pos = verifyinput(in)) >= 0)
+		inputerr(in, pos);
+	writetape(tm, in);
 
+	ext = (runtm(tm)) ? 1 : 0;
 	if (rtape) {
 		readtape(tm, tp);
 		fprintf(stdout, "TAPE: %s\n", tp);

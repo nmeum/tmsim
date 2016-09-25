@@ -102,38 +102,6 @@ newparser(char *str)
 }
 
 /**
- * Returns a string which 'marks' the given position in the given
- * string. Meaning it returns a string which is excactly as long as the
- * first 'pos' characters of the given string when printed to a terminal
- * (tab characters will be retained. The last character (ignoring the
- * null byte) of this returned string is '^' and will thus point to the
- * character at 'pos' in the original string if the two string are
- * printed to a terminal seperated by a newline character.
- *
- * @pre The length of the given string must be equal or greater than pos.
- * @param pos Position of the character in the given string the
- * 	returned string should point to.
- * @param str String to create marker for.
- * @retruns Marker for the given string as described above.
- */
-char*
-mark(int pos, char *str)
-{
-	char *res;
-
-	res = estrndup(str, pos);
-	for (int i = 0; i < pos; i++) {
-		if (res[i] != '\t')
-			res[i] = ' ';
-	}
-
-	res[pos - 1] = '^';
-	res[pos] = '\0';
-
-	return res;
-}
-
-/**
  * Formats a parerr as a string and includes line and column information
  * where the error (presumably) ocurred. The string is directly written
  * to the given stream.
@@ -267,7 +235,8 @@ ret:
 		return fprintf(stream, "%s\n", msg);
 	}
 
-	marker = mark(tok->column, line);
+ 	/* tok->column starts at position 1. */
+	marker = mark(tok->column - 1, line);
 	r = fprintf(stream, "%s:%d:%d: %s\n %s\n %s\n", fn, tok->line,
 			tok->column, msg, line, marker);
 
