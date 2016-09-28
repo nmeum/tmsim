@@ -49,7 +49,7 @@ mark(int pos, char *str)
 {
 	char *res;
 
-	res = estrndup(str, pos);
+	res = estrndup(str, pos + 1);
 	for (int i = 0; i <= pos; i++) {
 		if (res[i] != '\t')
 			res[i] = ' ';
