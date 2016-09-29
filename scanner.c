@@ -301,7 +301,7 @@ lexterm(scanner *scr, char *ter, toktype tkt)
 	if ((ret = xstrncmp(ter, &scr->input[scr->start], len)) == -1) {
 		emit(scr, tkt, TOKNOP);
 	} else {
-		scr->column = ret;
+		scr->column = ++ret;
 		emit(scr, TOK_ERROR, ERR_UNEXPECTED);
 	}
 
