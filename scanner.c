@@ -379,34 +379,36 @@ nexttoken(scanner *scr)
  * @pre Line must be greater than 0.
  * @param scr Scanner to extract line from.
  * @param line Line number.
- * @return -1 if the line number doesn't exist, 0 otherwise.
+ * @return A pointer to a dynamically allocated string containing
+ * 	the content of the given line if it exists. NULL if it doesn't.
  */
 char*
 linenum(scanner *scr, int line)
 {
-	char *c1, *c2, *res;
-	ptrdiff_t p1, p2;
-	size_t len;
+	char ch, *res;
+	size_t end, prev, newline;
 
 	assert(line >= 1);
 
-	p1 = 0;
-	while ((c1 = strchr(&scr->input[p1], '\n'))) {
+	prev = 0;
+	newline = -1;
+
+	for (end = 0; end <= scr->inlen; end++) {
+		ch = scr->input[end];
+		if (ch != '\n' && ch != '\0')
+			continue;
+
 		if (--line == 0) {
-			if ((c2 = strchr(&scr->input[p1], '\n'))) {
-				p2 = c2 - scr->input + 1;
-				len = p2 - p1;
-			} else {
-				len = scr->inlen - p1;
-			}
-
-			res = estrndup(&scr->input[p1], len - 1);
-			res[len - 1] = '\0'; /* Overwrite newline. */
-			return res;
+			prev = ++newline;
+			break;
+		} else {
+			newline = end;
 		}
-
-		p1 = c1 - scr->input + 1;
 	}
 
-	return NULL;
+	if (line != 0)
+		return NULL;
+
+	res = estrndup(&scr->input[prev], end - prev);
+	return res;
 }
