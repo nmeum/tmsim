@@ -69,13 +69,17 @@ mark(size_t pos, char *str)
  * @param s1 First string to use for comparison.
  * @param s2 Second string to use for comparison.
  * @param n Amount of bytes to compare.
- * @returns -1 If the two strings are equal, otherwise the position
- * 	of the first character that differed is returned.
+ * @param res Pointer to an address where the position of
+ * 	the first character that differed should be stored.
+ * 	The first element is located at position 0.
+ * @returns an integer less than, equal to, or greater than
+ * 	zero if s1 (or the first n bytes thereof) is found,
+ *	respectively, to be less than, to match, or be greater than s2.
  */
 int
-xstrncmp(char *s1, char *s2, size_t n)
+xstrncmp(char *s1, char *s2, size_t n, size_t *res)
 {
-	int i;
+	size_t i;
 
 	i = 1;
 	while (*s1 && *s1 == *s2 && i < n) {
@@ -84,7 +88,9 @@ xstrncmp(char *s1, char *s2, size_t n)
 		i++;
 	}
 
-	return (*s1 == *s2) ? -1 : --i;
+	if (*s1 == *s2)
+		*res = --i;
+	return *s1 - *s2;
 }
 
 /**

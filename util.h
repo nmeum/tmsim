@@ -24,7 +24,7 @@
 #define die(msg) \
 	do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-int xstrncmp(char*, char*, size_t);
+int xstrncmp(char*, char*, size_t, size_t*);
 char *readfile(char*);
 char *mark(size_t, char*);
 

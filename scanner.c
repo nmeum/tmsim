@@ -294,14 +294,13 @@ lexstate(scanner *scr)
 void*
 lexterm(scanner *scr, char *ter, toktype tkt)
 {
-	int ret;
-	size_t len;
+	size_t pos, len;
 
 	len = strlen(ter);
-	if ((ret = xstrncmp(ter, &scr->input[scr->start], len)) == -1) {
+	if (!xstrncmp(ter, &scr->input[scr->start], len, &pos)) {
 		emit(scr, tkt, TOKNOP);
 	} else {
-		scr->column = ++ret;
+		scr->column = ++pos;
 		emit(scr, TOK_ERROR, ERR_UNEXPECTED);
 	}
 
