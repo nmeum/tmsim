@@ -96,7 +96,7 @@ export(dtm *tm, FILE *stream)
 	fprintf(stream, "q%d;\n", tm->start);
 
 	fprintf(stream, "\nnode [shape = %s];\n", acceptingshape);
-	for (int i = 0; i < tm->acceptsiz; i++)
+	for (size_t i = 0; i < tm->acceptsiz; i++)
 		fprintf(stream, "q%d;\n", tm->accept[i]);
 
 	fprintf(stream, "\nnode [shape = %s];\n", nodeshape);

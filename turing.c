@@ -33,7 +33,7 @@
  * @param VARNAME Variable name used for current item.
  */
 #define MAP_FOREACH(MAP, VARNAME) \
-	for (int i = 0; i < MAP->size; i++) \
+	for (size_t i = 0; i < MAP->size; i++) \
 		for (VARNAME = MAP->entries[i]; \
 			VARNAME; VARNAME = VARNAME->next) \
 
@@ -44,7 +44,7 @@
  * @returns Pointer to the initialized tmmap.
  */
 tmmap*
-newtmmap(int size)
+newtmmap(size_t size)
 {
 	tmmap *map;
 
@@ -52,7 +52,7 @@ newtmmap(int size)
 	map->size = size;
 	map->entries = emalloc(sizeof(mapentry) * size);
 
-	for (int i = 0; i < size; i++)
+	for (size_t i = 0; i < size; i++)
 		map->entries[i] = NULL;
 
 	return map;
@@ -72,7 +72,7 @@ hash(tmmap *map, int key)
 	/* unsigned long hash = 5381; */
 
 	/* value = key; */
-	/* for (int i = 1; value; i *= 10) { */
+	/* for (size_t i = 1; value; i *= 10) { */
 	/* 	value = (value / i) % 10; */
 	/* 	hash = ((hash << 5) + hash) + value; */
 	/* } */
@@ -347,7 +347,7 @@ writetape(dtm *tm, char *str)
 void
 readtape(dtm *tm, char *dest)
 {
-	int i;
+	size_t i;
 	tapeentry *c;
 
 	for (i = 0, c = tm->first->next; c &&
@@ -366,7 +366,7 @@ readtape(dtm *tm, char *dest)
 int
 isaccepting(dtm *tm, int name)
 {
-	for (int i = 0; i < tm->acceptsiz; i++)
+	for (size_t i = 0; i < tm->acceptsiz; i++)
 		if (tm->accept[i] == name)
 			return 0;
 

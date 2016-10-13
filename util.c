@@ -45,12 +45,12 @@
  * @retruns Marker for the given string as described above.
  */
 char*
-mark(int pos, char *str)
+mark(size_t pos, char *str)
 {
 	char *res;
 
 	res = estrndup(str, pos + 1);
-	for (int i = 0; i <= pos; i++) {
+	for (size_t i = 0; i <= pos; i++) {
 		if (res[i] != '\t')
 			res[i] = ' ';
 	}
@@ -101,6 +101,7 @@ readfile(char *fp)
 {
 	FILE *fd;
 	char *fc;
+	size_t read;
 	struct stat st;
 
 	if (stat(fp, &st))
@@ -110,8 +111,10 @@ readfile(char *fp)
 
 	if (!(fd = fopen(fp, "r")))
 		return NULL;
-	if (fread(fc, sizeof(char), st.st_size, fd) != st.st_size)
-		return NULL;
+
+	read = fread(fc, sizeof(char), st.st_size, fd);
+	if (st.st_size < 0 || read != (unsigned)st.st_size)
+		return NULL; /* TODO errno isn't set here. */
 
 	if (fclose(fd))
 		return NULL;

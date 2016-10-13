@@ -63,7 +63,7 @@ struct _mapentry {
 typedef struct _tmmap tmmap;
 
 struct _tmmap {
-	int size;		/**< Amount of buckets which should be used. */
+	size_t size;		/**< Amount of buckets which should be used. */
 	mapentry **entries;	/**< Pointer pointing to entry pointers. */
 };
 
@@ -121,7 +121,7 @@ struct _dtm {
 	tmmap *states;		/**< States of this turing maschine. */
 	int start;		/**< Initial state for this turing maschine. */
 
-	int acceptsiz;		/**< Amount of accepting state of this turing maschine. */
+	size_t acceptsiz;	/**< Amount of accepting state of this turing maschine. */
 	int accept[MAXACCEPT];	/**< Accepting states of this turing maschine. */
 };
 

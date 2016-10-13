@@ -280,7 +280,7 @@ freeparser(parser *par)
 parerr
 parsemeta(parser *par, dtm *dest)
 {
-	int i = 0;
+	size_t i;
 
 	par->tok = next(par);
 	if (par->tok->type != TOK_START)
@@ -297,6 +297,7 @@ parsemeta(parser *par, dtm *dest)
 	if (par->tok->type != TOK_ACCEPT)
 		return PAR_ACCEPTKEY;
 
+	i = 0;
 	do {
 		par->tok = next(par);
 		if (i > MAXACCEPT)

@@ -26,7 +26,7 @@
 
 int xstrncmp(char*, char*, size_t);
 char *readfile(char*);
-char *mark(int, char*);
+char *mark(size_t, char*);
 
 char *estrndup(char *s, size_t n);
 void *emalloc(size_t size);
