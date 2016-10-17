@@ -1,7 +1,6 @@
 # Input: A binary number.
 # Accepts if the given number has an even amout of 0s
-# 	or doesn't contain any zeros at all. Besides
-# 	the empty word is also accepted.
+# 	or doesn't contain any zeros at all.
 
 start: q1;
 accept: q0;

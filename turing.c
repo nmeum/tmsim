@@ -430,7 +430,10 @@ runtm(dtm *tm)
 {
 	tmstate start;
 
-	if (getstate(tm, tm->start, &start))
+	/* tm->first->next is only null if the user supplied the
+	 * empty word as input for this turing maschine in that
+	 * case we don't wont to perform any further transitions. */
+	if (getstate(tm, tm->start, &start) || !tm->first->next)
 		return isaccepting(tm, tm->start);
 
 	return compute(tm, &start);
