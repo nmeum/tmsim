@@ -68,15 +68,8 @@ newtmmap(size_t size)
 int
 hash(tmmap *map, int key)
 {
-	/* int value; */
-	/* unsigned long hash = 5381; */
-
-	/* value = key; */
-	/* for (size_t i = 1; value; i *= 10) { */
-	/* 	value = (value / i) % 10; */
-	/* 	hash = ((hash << 5) + hash) + value; */
-	/* } */
-
+	/* XXX: A more advanced hashing function could be
+	 * used here but this is good enough for now. */
 	return key % map->size;
 }
 
