@@ -82,7 +82,8 @@ inputerr(char *str, int pos)
 int
 main(int argc, char **argv)
 {
-	int pos, ext, rtape;
+	size_t pos;
+	int ext, rtape;
 	parerr ret;
 	dtm *tm;
 	parser *par;
@@ -124,7 +125,7 @@ main(int argc, char **argv)
 	freeparser(par);
 
 	in = argv[optind];
-	if ((pos = verifyinput(in)) >= 0)
+	if (!verifyinput(in, &pos))
 		inputerr(in, pos);
 	writetape(tm, in);
 

@@ -505,20 +505,24 @@ dirstr(direction dir)
  * contain the special blank symbol.
  *
  * @param str Pointer to a string which should be verified.
- * @returns Position of the first character that wasn't valid or
- * 	-1 if the given string is a valid input string.
+ * @param res Pointer to an address where the position
+ * 	of the first character that wasn't valid input should be
+ * 	stored. The first element is assigned position 0.
+ * @returns 0 if the input isn't valid or a non-zero number if it is.
  */
 int
-verifyinput(char *str)
+verifyinput(char *str, size_t *res)
 {
-	int pos;
+	size_t pos;
 	char ch;
 
-	pos = -1;
+	pos = 0;
 	while ((ch = *str++)) {
+		if (!((isalpha(ch) || isdigit(ch)) && ch != BLANKCHAR)) {
+			*res = pos;
+			return 0;
+		}
 		pos++;
-		if (!((isalpha(ch) || isdigit(ch)) && ch != BLANKCHAR))
-			return pos;
 	}
 
 	return -1;
