@@ -251,7 +251,7 @@ lexcomment(scanner *scr) {
 void*
 lexstate(scanner *scr)
 {
-	char *input;
+	char *input, *dest;
 	int col;
 	long value;
 	size_t len;
@@ -264,7 +264,7 @@ lexstate(scanner *scr)
 	scr->column = col;
 
 	len = scr->pos - scr->start - 1;
-	char dest[len];
+	dest = emalloc(len + 1);
 
 	strncpy(dest, input, len);
 	dest[len] = '\0';
@@ -274,6 +274,7 @@ lexstate(scanner *scr)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
 	else if (value >= INT_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
+	free(dest);
 
 	emit(scr, TOK_STATE, (int)value);
 	scr->column += len - 1;
