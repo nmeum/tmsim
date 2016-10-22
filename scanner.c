@@ -277,7 +277,7 @@ lexstate(scanner *scr)
 	free(dest);
 
 	emit(scr, TOK_STATE, (int)value);
-	scr->column += len - 1;
+	scr->column += len; /* Initial 'q' and digits. */
 
 	return lexany(scr);
 }
