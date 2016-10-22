@@ -43,6 +43,7 @@
  * @param size Amount of buckets that should be used.
  * @returns Pointer to the initialized tmmap.
  */
+static
 tmmap*
 newtmmap(size_t size)
 {
@@ -65,6 +66,7 @@ newtmmap(size_t size)
  * @param key Key that should be hashed.
  * @returns Hash of the given key.
  */
+static
 int
 hash(tmmap *map, int key)
 {
@@ -79,6 +81,7 @@ hash(tmmap *map, int key)
  * @param key Key which should be used for this entry.
  * @returns Pointer to initialized mapentry.
  */
+static
 mapentry*
 newmapentry(int key)
 {
@@ -95,6 +98,7 @@ newmapentry(int key)
  *
  * @param ent Pointer to map entry which should be freed.
  */
+static
 void
 freemapentry(mapentry *ent)
 {
@@ -114,6 +118,7 @@ freemapentry(mapentry *ent)
  * @param ent Entry which should be added.
  * @returns -1 if the key was already present, 0 otherwise.
  */
+static
 int
 setval(tmmap *map, mapentry *ent)
 {
@@ -145,6 +150,7 @@ setval(tmmap *map, mapentry *ent)
  * @param dest Pointer to mapentry used to store the associated value.
  * @returns -1 if a value for the given key didn't exist, 0 otherwise.
  */
+static
 int
 getval(tmmap *map, int key, mapentry *dest)
 {
@@ -173,6 +179,7 @@ getval(tmmap *map, int key, mapentry *dest)
  * @param next Entry on the right hand side of this one.
  * @returns Pointer to the newly created tape entry.
  */
+static
 tapeentry*
 newtapeentry(char value, tapeentry *prev, tapeentry *next)
 {
@@ -356,6 +363,7 @@ readtape(dtm *tm, char *dest)
  * @param name State name to check.
  * @returns 0 if it does, -1 if it doesn't.
  */
+static
 int
 isaccepting(dtm *tm, int name)
 {
@@ -374,6 +382,7 @@ isaccepting(dtm *tm, int name)
  * @param state State to perform transitions from.
  * @return 0 if the reached state is an accepting state, -1 otherwise.
  */
+static
 int
 compute(dtm *tm, tmstate *state)
 {

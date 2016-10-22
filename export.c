@@ -53,6 +53,7 @@ static char *acceptingshape = "doublecircle";
  * @param state State the transition belongs to.
  * @param arg Void pointer to a stream the output should be written to.
  */
+static
 void
 exporttrans(tmtrans *trans, tmstate *state, void *arg)
 {
@@ -71,6 +72,7 @@ exporttrans(tmtrans *trans, tmstate *state, void *arg)
  * @param state State to create dot markup for.
  * @param arg Void pointer to a stream the output should be written to.
  */
+static
 void
 exportstate(tmstate *state, void *arg)
 {
@@ -86,6 +88,7 @@ exportstate(tmstate *state, void *arg)
  * @param tm Turing machine to create dot markup for.
  * @param stream Stream to write dot markup to.
  */
+static
 void
 export(dtm *tm, FILE *stream)
 {
@@ -108,6 +111,7 @@ export(dtm *tm, FILE *stream)
  * Writes the usage string for this program to stderr and terminates
  * the programm with EXIT_FAILURE.
  */
+static
 void
 usage(char *prog)
 {

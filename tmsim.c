@@ -42,6 +42,7 @@ enum {
  * Writes the usage string for this program to stderr and terminates
  * the program with EXIT_FAILURE.
  */
+static
 void
 usage(char *prog)
 {
@@ -59,6 +60,7 @@ usage(char *prog)
  * @param pos Position of the first invalid character. The first
  * 	character is located at position 0 not 1.
  */
+static
 void
 inputerr(char *str, int pos)
 {
