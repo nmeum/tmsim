@@ -337,23 +337,27 @@ writetape(dtm *tm, char *str)
 /**
  * Reads the string currently stored on the tape of the given turing maschine.
  * The string starts at the beginnig of the tape and ends as soons as the first
- * blank character is encountered.
+ * blank character is encountered. The returned string will always be null
+ * terminated.
  *
  * @param tm Turing machine whose tape should be read.
  * @param dest Pointer to a buffer where the result should be stored.
  * 	The result will be terminated by a null byte ('\0'). If the tape is
  * 	currently empty the only thing stored will be the null byte.
+ * @param n Amount of data that should be copied to dest.
  */
 void
-readtape(dtm *tm, char *dest)
+readtape(dtm *tm, char *dest, size_t n)
 {
 	size_t i;
 	tapeentry *c;
 
-	for (i = 0, c = tm->first->next; c &&
-			c->value != BLANKCHAR; i++, c = c->next)
+	n--; /* Save space for the null byte */
+	for (i = 0, c = tm->first->next; c && n > i &&
+			c->value != BLANKCHAR; i++, n--, c = c->next)
 		dest[i] = c->value;
-	dest[i] = '\0';
+
+	if (n > 0) dest[i] = '\0';
 }
 
 /**

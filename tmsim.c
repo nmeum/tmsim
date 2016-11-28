@@ -133,7 +133,7 @@ main(int argc, char **argv)
 
 	ext = (runtm(tm)) ? 1 : 0;
 	if (rtape) {
-		readtape(tm, tp);
+		readtape(tm, tp, MAXTAPSIZ);
 		fprintf(stdout, "TAPE: %s\n", tp);
 	}
 
