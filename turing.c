@@ -392,7 +392,7 @@ compute(dtm *tm, tmstate *state)
 {
 	char in;
 	tmtrans trans;
-	tmstate next;
+	static tmstate next; /* static to enable tail call optimization. */
 
 	if (!tm->tape->next)
 		tm->tape->next = newtapeentry(BLANKCHAR, tm->tape, NULL);
