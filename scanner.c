@@ -44,8 +44,7 @@ static void *lexterm(scanner*, char*, toktype);
  * @param scr Scanner from which character should be read.
  * @returns The next character or -1 if there is none.
  */
-static
-char
+static char
 nextch(scanner *scr)
 {
 	if (scr->pos >= scr->inlen)
@@ -61,8 +60,7 @@ nextch(scanner *scr)
  * @param scr Scanner from which character should be read.
  * @returns The next character or -1 if there is none.
  */
-static
-char
+static char
 peekch(scanner *scr)
 {
 	char nxt = nextch(scr);
@@ -76,8 +74,7 @@ peekch(scanner *scr)
  *
  * @param scr Scanner for which characters should be ignored.
  */
-static
-void
+static void
 ignore(scanner *scr)
 {
 	scr->start = scr->pos;
@@ -89,8 +86,7 @@ ignore(scanner *scr)
  *
  * @returns Non-zero integer if it is, zero if it isn't.
  */
-static
-int
+static int
 issymbol(char c)
 {
 	return isalpha(c) || isdigit(c) || c == BLANKCHAR;
@@ -103,8 +99,7 @@ issymbol(char c)
  * @param tkt Type of the token.
  * @param value Value of the token, should be greater than or equal to zero.
  */
-static
-void
+static void
 emit(scanner *scr, toktype tkt, int value)
 {
 	token *tok;
@@ -126,8 +121,7 @@ emit(scanner *scr, toktype tkt, int value)
  * @param pscr Void pointer to the scanner used for lexing.
  * @returns A null pointer.
  */
-static
-void*
+static void*
 lexany(void *pscr)
 {
 	char nxt;
@@ -210,8 +204,7 @@ lexany(void *pscr)
  * @param scr Pointer to the associated scanner.
  * @returns A null pointer.
  */
-static
-void*
+static void*
 lexspace(scanner *scr)
 {
 	while (isspace(peekch(scr))) {
@@ -230,8 +223,7 @@ lexspace(scanner *scr)
  * @param scr Pointer to the associated scanner.
  * @returns A null pointer.
  */
-static
-void*
+static void*
 lexcomment(scanner *scr) {
 	while (peekch(scr) != '\n') {
 		nextch(scr);
@@ -256,8 +248,7 @@ lexcomment(scanner *scr) {
  * @param scr Pointer to the associated scanner.
  * @returns A null pointer.
  */
-static
-void*
+static void*
 lexstate(scanner *scr)
 {
 	char *input, *dest;
@@ -301,8 +292,7 @@ lexstate(scanner *scr)
  * @param tkt Token type to use if the expected terminal symbol was found.
  * @returns A null pointer.
  */
-static
-void*
+static void*
 lexterm(scanner *scr, char *ter, toktype tkt)
 {
 	size_t pos, len;

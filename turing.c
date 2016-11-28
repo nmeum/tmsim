@@ -43,8 +43,7 @@
  * @param size Amount of buckets that should be used.
  * @returns Pointer to the initialized tmmap.
  */
-static
-tmmap*
+static tmmap*
 newtmmap(size_t size)
 {
 	tmmap *map;
@@ -66,8 +65,7 @@ newtmmap(size_t size)
  * @param key Key that should be hashed.
  * @returns Hash of the given key.
  */
-static
-int
+static int
 hash(tmmap *map, int key)
 {
 	/* XXX: A more advanced hashing function could be
@@ -81,8 +79,7 @@ hash(tmmap *map, int key)
  * @param key Key which should be used for this entry.
  * @returns Pointer to initialized mapentry.
  */
-static
-mapentry*
+static mapentry*
 newmapentry(int key)
 {
 	mapentry *ent;
@@ -98,8 +95,7 @@ newmapentry(int key)
  *
  * @param ent Pointer to map entry which should be freed.
  */
-static
-void
+static void
 freemapentry(mapentry *ent)
 {
 	mapentry *next;
@@ -118,8 +114,7 @@ freemapentry(mapentry *ent)
  * @param ent Entry which should be added.
  * @returns -1 if the key was already present, 0 otherwise.
  */
-static
-int
+static int
 setval(tmmap *map, mapentry *ent)
 {
 	int mkey;
@@ -150,8 +145,7 @@ setval(tmmap *map, mapentry *ent)
  * @param dest Pointer to mapentry used to store the associated value.
  * @returns -1 if a value for the given key didn't exist, 0 otherwise.
  */
-static
-int
+static int
 getval(tmmap *map, int key, mapentry *dest)
 {
 	int mkey;
@@ -179,8 +173,7 @@ getval(tmmap *map, int key, mapentry *dest)
  * @param next Entry on the right hand side of this one.
  * @returns Pointer to the newly created tape entry.
  */
-static
-tapeentry*
+static tapeentry*
 newtapeentry(char value, tapeentry *prev, tapeentry *next)
 {
 	tapeentry *entr;
@@ -367,8 +360,7 @@ readtape(dtm *tm, char *dest, size_t n)
  * @param name State name to check.
  * @returns 0 if it does, -1 if it doesn't.
  */
-static
-int
+static int
 isaccepting(dtm *tm, int name)
 {
 	for (size_t i = 0; i < tm->acceptsiz; i++)
@@ -386,8 +378,7 @@ isaccepting(dtm *tm, int name)
  * @param state State to perform transitions from.
  * @return 0 if the reached state is an accepting state, -1 otherwise.
  */
-static
-int
+static int
 compute(dtm *tm, tmstate *state)
 {
 	char in;

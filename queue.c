@@ -32,8 +32,7 @@
  * @param value Value which should stored in this node.
  * @returns A pointer to the newly created node.
  */
-static
-node*
+static node*
 newnode(token *value)
 {
 	node *nd;

@@ -42,8 +42,7 @@ enum {
  * Writes the usage string for this program to stderr and terminates
  * the program with EXIT_FAILURE.
  */
-static
-void
+static void
 usage(char *prog)
 {
 	char *usage = "[-r] [-h|-v] FILE [INPUT]";
@@ -60,8 +59,7 @@ usage(char *prog)
  * @param pos Position of the first invalid character. The first
  * 	character is located at position 0 not 1.
  */
-static
-void
+static void
 inputerr(char *str, int pos)
 {
 	char *marker, *msg = "Input can only consist of alphanumeric "

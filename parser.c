@@ -45,8 +45,7 @@
  * @pre A previous call of this function should not have returned TOK_EOF.
  * @returns Next token.
  */
-static
-token*
+static token*
 next(parser *par)
 {
 	token *tok;
@@ -71,8 +70,7 @@ next(parser *par)
  * @param par Parser to extract next token from.
  * @returns Next token.
  */
-static
-token*
+static token*
 peek(parser *par)
 {
 	token *tok;
@@ -279,8 +277,7 @@ freeparser(parser *par)
  * 	of the dtm struct are set accordingly.
  * @return Error code or PAR_OK if no error was encountered.
  */
-static
-parerr
+static parerr
 parsemeta(parser *par, dtm *dest)
 {
 	size_t i;
@@ -335,8 +332,7 @@ parsemeta(parser *par, dtm *dest)
  * 	successfully, the struct fields are initialized accordingly.
  * @return Error code or PAR_OK if no error was encountered.
  */
-static
-parerr
+static parerr
 parsetrans(parser *par, tmtrans *dest)
 {
 	par->tok = next(par);
@@ -390,8 +386,7 @@ parsetrans(parser *par, tmtrans *dest)
  * 	successfully, the struct fields are initialized accordingly.
  * @return Error code or PAR_OK if no error was encountered.
  */
-static
-parerr
+static parerr
 parsestate(parser *par, tmstate *dest)
 {
 	tmtrans *trans;
@@ -443,8 +438,7 @@ parsestate(parser *par, tmstate *dest)
  * 	successfully, the struct fields are initialized accordingly.
  * @return Error code or PAR_OK if no error was encountered.
  */
-static
-parerr
+static parerr
 parsestates(parser *par, dtm *dest)
 {
 	parerr ret;
