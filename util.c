@@ -88,8 +88,11 @@ xstrncmp(char *s1, char *s2, size_t n, size_t *res)
 		i++;
 	}
 
-	if (*s1 == *s2)
+	if (*s1 == *s2) {
 		*res = --i;
+		return 0;
+	}
+
 	return *s1 - *s2;
 }
 
