@@ -225,14 +225,14 @@ lexspace(scanner *scr)
  */
 static void*
 lexcomment(scanner *scr) {
-	while (peekch(scr) != '\n') {
-		nextch(scr);
+	while (peekch(scr) != '\n')
+		if (nextch(scr) == -1)
+			break;
 
-		/* We don't need to increment scr->column here because
-		 * comments are currently not exposed to the parser
-		 * and since they end with a newline they don't effect
-		 * other tokens either (unlike white-spaces). */
-	}
+	/* We don't need to increment scr->column here because
+	 * comments are currently not exposed to the parser
+	 * and since they end with a newline they don't effect
+	 * other tokens either (unlike white-spaces). */
 
 	ignore(scr);
 	return lexany(scr);
