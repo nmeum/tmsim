@@ -78,7 +78,7 @@ main(int argc, char **argv)
 	parerr ret;
 	dtm *tm;
 	parser *par;
-	char opt, *in, *fc, *fp, *tp;
+	char opt, *in, *fc, *fp;
 
 	rtape = 0;
 	while ((opt = getopt(argc, argv, "rhv")) != -1) {
@@ -121,10 +121,8 @@ main(int argc, char **argv)
 	writetape(tm, in);
 
 	ext = (runtm(tm)) ? 1 : 0;
-	if (rtape) {
-		tp = readtape(tm);
-		fprintf(stdout, "TAPE: %s\n", tp);
-	}
+	if (rtape)
+		printtape(tm);
 
 	return ext;
 }

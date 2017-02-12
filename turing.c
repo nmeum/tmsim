@@ -22,6 +22,7 @@
 #include <semaphore.h>
 #include <assert.h>
 #include <ctype.h>
+#include <stdio.h>
 
 #include "util.h"
 #include "turing.h"
@@ -328,40 +329,31 @@ writetape(dtm *tm, char *str)
 }
 
 /**
- * Reads the content currently stored on the tape of the given turing
- * machine and returns a string with that content. The tape is
- * (theoretically speaking) infinite but since we don't have infinite
- * amounts of memory we only generate the blanks on the beginning and
- * end of the tape when you access them. Therefore, the output will
- * contain as many blanks as accessed by the caller.
+ * Writes the content of the tape to STDOUT. The output is always
+ * terminated by a newline character.
+ *
+ * The tape is (theoretically speaking) infinite but since we don't have
+ * infinite amounts of memory we only generate the blanks on the
+ * beginning and end of the tape when you access them. Therefore, the
+ * output will contain as many blanks as accessed by the caller.
  *
  * However, the output might start with a blank even if you didn't access
  * the left-hand side of the tape since the turing machines tape is by
  * default initialized with a single blank character.
  *
  * @param tm Turing machine whose tape should be read.
- * @returns Pointer to a string containing the content of the
- * 	machines tape.
  */
-char*
-readtape(dtm *tm)
+void
+printtape(dtm *tm)
 {
-	size_t len, i;
-	char *ret;
 	tapeentry *c, *s;
 
 	for (s = tm->tape; s->prev; s = s->prev)
 		;
-	for (len = 1, c = s; c; len++, c = c->next)
-		;
 
-	ret = emalloc(len);
-	for (i = 0, c = s; c; i++, c = c->next) {
-		ret[i] = c->value;
-	}
-
-	ret[--len] = '\0';
-	return ret;
+	for (c = s; c; c = c->next)
+		putchar(c->value);
+	putchar('\n');
 }
 
 /**
