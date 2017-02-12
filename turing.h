@@ -116,8 +116,6 @@ typedef struct _dtm dtm;
 
 struct _dtm {
 	tapeentry *tape;	/**< Current tape content of this turing maschine. */
-	tapeentry *first;	/**< Pointer to the anchor element of the tape. */
-
 	tmmap *states;		/**< States of this turing maschine. */
 	int start;		/**< Initial state for this turing maschine. */
 
@@ -135,7 +133,7 @@ int addstate(dtm*, tmstate*);
 int getstate(dtm*, int, tmstate*);
 
 void writetape(dtm*, char*);
-size_t readtape(dtm*, char*, size_t);
+char *readtape(dtm*);
 
 void eachstate(dtm*, void (*fn)(tmstate*, void*), void*);
 void eachtrans(tmstate*, void(*fn)(tmtrans*, tmstate*, void*), void*);

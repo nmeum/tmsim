@@ -214,7 +214,7 @@ newtm(void)
 	tm = emalloc(sizeof(dtm));
 	tm->states = newtmmap(STATEMAPSIZ);
 	tm->start = tm->acceptsiz = 0;
-	tm->tape = tm->first = newtapeentry(BLANKCHAR, NULL, NULL);
+	tm->tape = newtapeentry(BLANKCHAR, NULL, NULL);
 	return tm;
 }
 
@@ -289,7 +289,7 @@ addtrans(tmstate *state, tmtrans *trans)
  * @param state State from which a transition should be extracted.
  * @param rsym Symbol which triggers the tranisition.
  * @param dest Pointer to a transition which should be used for storing the result.
- * @returns -1 if a tranisition with the given symbol doesn't exist, 0 otherwise.
+ * @returns -1 if a transition with the given symbol doesn't exist, 0 otherwise.
  */
 int
 gettrans(tmstate *state, int rsym, tmtrans *dest)
@@ -328,26 +328,40 @@ writetape(dtm *tm, char *str)
 }
 
 /**
- * Reads the string currently stored on the tape of the given turing maschine.
- * The string starts at the beginnig of the tape and ends as soons as the first
- * blank character is encountered.
+ * Reads the content currently stored on the tape of the given turing
+ * machine and returns a string with that content. The tape is
+ * (theoretically speaking) infinite but since we don't have infinite
+ * amounts of memory we only generate the blanks on the beginning and
+ * end of the tape when you access them. Therefore, the output will
+ * contain as many blanks as accessed by the caller.
+ *
+ * However, the output might start with a blank even if you didn't access
+ * the left-hand side of the tape since the turing machines tape is by
+ * default initialized with a single blank character.
  *
  * @param tm Turing machine whose tape should be read.
- * @param dest Pointer to a buffer where the result should be stored.
- * @param n Amount of bytes that should be copied to dest.
- * @returns Amount of bytes written to dest.
+ * @returns Pointer to a string containing the content of the
+ * 	machines tape.
  */
-size_t
-readtape(dtm *tm, char *dest, size_t n)
+char*
+readtape(dtm *tm)
 {
-	size_t i;
-	tapeentry *c;
+	size_t len, i;
+	char *ret;
+	tapeentry *c, *s;
 
-	for (i = 0, c = tm->first->next; c && n > i &&
-			c->value != BLANKCHAR; i++, n--, c = c->next)
-		dest[i] = c->value;
+	for (s = tm->tape; s->prev; s = s->prev)
+		;
+	for (len = 1, c = s; c; len++, c = c->next)
+		;
 
-	return i;
+	ret = emalloc(len);
+	for (i = 0, c = s; c; i++, c = c->next) {
+		ret[i] = c->value;
+	}
+
+	ret[--len] = '\0';
+	return ret;
 }
 
 /**
@@ -424,10 +438,10 @@ runtm(dtm *tm)
 {
 	tmstate start;
 
-	/* tm->first->next is only null if the user supplied the
+	/* tm->tape->next is only null if the user supplied the
 	 * empty word as input for this turing maschine in that
 	 * case we don't wont to perform any further transitions. */
-	if (getstate(tm, tm->start, &start) || !tm->first->next)
+	if (getstate(tm, tm->start, &start) || !tm->tape->next)
 		return isaccepting(tm, tm->start);
 
 	return compute(tm, &start);

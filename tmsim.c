@@ -29,15 +29,6 @@
 #include "turing.h"
 #include "parser.h"
 
-enum {
-	/**
-	 * Maximum size of the string returned by ::readtape. Thus
-	 * corresponding to the maximal number of tape entries printed
-	 * to stdout when the -r flag is used.
-	 */
-	MAXTAPSIZ = 1024 * 5,
-};
-
 /**
  * Writes the usage string for this program to stderr and terminates
  * the program with EXIT_FAILURE.
@@ -87,7 +78,7 @@ main(int argc, char **argv)
 	parerr ret;
 	dtm *tm;
 	parser *par;
-	char opt, *in, *fc, *fp, tp[MAXTAPSIZ];
+	char opt, *in, *fc, *fp, *tp;
 
 	rtape = 0;
 	while ((opt = getopt(argc, argv, "rhv")) != -1) {
@@ -131,7 +122,7 @@ main(int argc, char **argv)
 
 	ext = (runtm(tm)) ? 1 : 0;
 	if (rtape) {
-		tp[readtape(tm, tp, MAXTAPSIZ - 1)] = '\0';
+		tp = readtape(tm);
 		fprintf(stdout, "TAPE: %s\n", tp);
 	}
 
