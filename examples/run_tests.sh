@@ -9,14 +9,14 @@ fi
 exitstatus=0
 exresfile=
 
-for test in *.ex; do
-	tmsimfile="${test%%.ex}.tm"
+for test in *.csv; do
+	tmsimfile="${test%%.csv}.tm"
 
-	printf "\n##\n# Testing '${test##*/}'.\n##\n\n"
+	printf "\n##\n# Testing '${tmsimfile##*/}'.\n##\n\n"
 
 	while read -r line; do
-		input="$(echo "${line}" | cut -d '|' -f1)"
-		status="$(echo "${line}" | cut -d '|' -f2)"
+		input="$(echo "${line}" | cut -d ',' -f1)"
+		status="$(echo "${line}" | cut -d ',' -f2)"
 
 		echo "Testing '${test##*/}' with input '${input}':"
 		${TMSIM} "${tmsimfile}" "${input}"
