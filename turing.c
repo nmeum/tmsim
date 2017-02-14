@@ -518,7 +518,7 @@ verifyinput(char *str, size_t *res)
 
 	pos = 0;
 	while ((ch = *str++)) {
-		if (!((isalpha(ch) || isdigit(ch)) && ch != BLANKCHAR)) {
+		if (!isalnum(ch) || ch == BLANKCHAR) {
 			*res = pos;
 			return 0;
 		}

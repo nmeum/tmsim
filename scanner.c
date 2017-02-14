@@ -81,15 +81,16 @@ ignore(scanner *scr)
 }
 
 /**
- * Whether or not the current character is a valid turing maschine input symbol.
- * Which is the case if it is either an alphanumeric character or a digit.
+ * Whether or not the current character is a valid turing maschine input
+ * symbol. Which is the case if it is either an alphanumeric character
+ * or the special blank character.
  *
  * @returns Non-zero integer if it is, zero if it isn't.
  */
 static int
 issymbol(char c)
 {
-	return isalpha(c) || isdigit(c) || c == BLANKCHAR;
+	return isalnum(c) || c == BLANKCHAR;
 }
 
 /**

@@ -54,7 +54,7 @@ static void
 inputerr(char *str, int pos)
 {
 	char *marker, *msg = "Input can only consist of alphanumeric "
-		"characters\n\tand digits. Besides it can't contain the "
+		"characters.\n\t Besides it can't contain the "
 		"special blank character.";
 
 	marker = mark(pos, str);

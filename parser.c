@@ -201,8 +201,8 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	case PAR_RSYMBOL:
 		msg = "Your transition definition is missing a symbol "
 			"which triggers this transition. This symbol "
-			"can only be an alphanumeric character, a digit "
-			"or the special blank character.";
+			"can only be an alphanumeric character or the "
+			"special blank character.";
 		break;
 	case PAR_DIRECTION:
 		msg = "Expected direction to move head to, this symbol is "
