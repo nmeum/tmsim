@@ -41,7 +41,7 @@ typedef struct _tmtrans tmtrans; /**< Transition from one state to another. */
 typedef struct _mapentry mapentry;
 
 struct _mapentry {
-	int key;	/**< Key of this entry. */
+	size_t key;	/**< Key of this entry. */
 
 	/**
 	 * If there was a hash collision bucket hashing is used which means
