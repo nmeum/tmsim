@@ -1,7 +1,7 @@
 tmsim
 =====
 
-A buggy turing machine simulator (work in progress).
+A fast turing machine simulator with graphviz export functionality.
 
 Dependencies
 ============
