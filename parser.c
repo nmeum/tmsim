@@ -108,7 +108,7 @@ newparser(char *str)
  *
  * @pre Parser must have encountered an error.
  * @param par Parser which returned the parerr.
- * @param parerr Parser error returned by ::parsetm.
+ * @param err Parser error returned by ::parsetm.
  * @param fn Name of the file the parser was trying to parse.
  * @param stream Stream to write error message to.
  * @return Number of characters written to the stream.
@@ -327,7 +327,6 @@ parsemeta(parser *par, dtm *dest)
  * \endcode
  *
  * @param par Parser for which a transition should be parsed.
- * @param rsym Input alphabet symbol which triggers this transition.
  * @param dest Pointer to a transition, if the transition was parsed
  * 	successfully, the struct fields are initialized accordingly.
  * @return Error code or PAR_OK if no error was encountered.

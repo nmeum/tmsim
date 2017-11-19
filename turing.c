@@ -224,7 +224,7 @@ newtm(void)
  *
  * @param tm Turing maschine to which a state should be added.
  * @param state State which should be added to the turing maschine.
- * @retruns -1 if a state with the given name already exists, 0 otherwise.
+ * @returns -1 if a state with the given name already exists, 0 otherwise.
  */
 int
 addstate(dtm *tm, tmstate *state)
@@ -480,7 +480,7 @@ eachtrans(tmstate *state, void (*fn)(tmtrans*, tmstate*, void*), void *arg)
 /**
  * Returns a char representation for a head direction.
  *
- * @param direction Head direction which should be converted.
+ * @param dir Head direction which should be converted.
  * @returns Char describing the direction.
  */
 char

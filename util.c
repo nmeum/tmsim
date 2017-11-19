@@ -42,7 +42,7 @@
  * 	returned string should point to. The first element is at
  * 	position 0 not at position 1.
  * @param str String to create marker for.
- * @retruns Marker for the given string as described above.
+ * @returns Marker for the given string as described above.
  */
 char*
 mark(size_t pos, char *str)
@@ -100,7 +100,7 @@ xstrncmp(char *s1, char *s2, size_t n, size_t *res)
  * Reads the content of the given file at the given path and returns a
  * pointer to a newly allocated string containing the content.
  *
- * @param Path to file which should be read.
+ * @param fp to file which should be read.
  * @returns Pointer to a string containing the content of the given file.
  * 	If an error occured while trying to read the given file NULL is
  * 	returned and errno is set to indicate the error.
