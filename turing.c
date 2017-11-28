@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2017 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -127,7 +127,7 @@ setval(tmmap *map, mapentry *ent)
 		return 0;
 	}
 
-	for (next = buck; next != NULL; next = next->next) {
+	for (last = next = buck; next != NULL; next = next->next) {
 		if (ent->key == next->key)
 			return -1;
 
