@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2017 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -391,19 +391,17 @@ linenum(scanner *scr, int line)
 
 	assert(line >= 1);
 
-	prev = 0;
-	newline = -1;
-
+	newline = prev = 0;
 	for (end = 0; end <= scr->inlen; end++) {
 		ch = scr->input[end];
 		if (ch != '\n' && ch != '\0')
 			continue;
 
 		if (--line == 0) {
-			prev = ++newline;
+			prev = newline++;
 			break;
 		} else {
-			newline = end;
+			newline = end + 1;
 		}
 	}
 
