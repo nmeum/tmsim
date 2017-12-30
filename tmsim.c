@@ -74,11 +74,11 @@ int
 main(int argc, char **argv)
 {
 	size_t pos;
-	int ext, rtape;
+	int opt, ext, rtape;
 	parerr ret;
 	dtm *tm;
 	parser *par;
-	char opt, *in, *fc, *fp;
+	char *in, *fc, *fp;
 
 	rtape = 0;
 	while ((opt = getopt(argc, argv, "rhv")) != -1) {
