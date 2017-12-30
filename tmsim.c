@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2017 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -51,14 +51,14 @@ usage(char *prog)
  * 	character is located at position 0 not 1.
  */
 static void
-inputerr(char *str, int pos)
+inputerr(char *str, size_t pos)
 {
 	char *marker, *msg = "Input can only consist of alphanumeric "
 		"characters.\n\t Besides it can't contain the "
 		"special blank character.";
 
 	marker = mark(pos, str);
-	fprintf(stderr, "Input error at position %d: %s\n %s\n %s\n",
+	fprintf(stderr, "Input error at position %zu: %s\n %s\n %s\n",
 			++pos, msg, str, marker);
 
 	exit(EXIT_FAILURE);
