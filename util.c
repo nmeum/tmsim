@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2017 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -115,24 +115,20 @@ readfile(char *fp)
 
 	if (stat(fp, &st))
 		return NULL;
-	else
-		fc = emalloc(st.st_size + 1);
 
+	fc = emalloc(st.st_size + 1);
 	if (!(fd = fopen(fp, "r")))
 		return NULL;
 
 	read = fread(fc, sizeof(char), st.st_size, fd);
-	if (st.st_size < 0 || read != (unsigned)st.st_size)
-		return NULL; /* TODO errno isn't set here. */
-
+	if (ferror(fd))
+		return NULL;
 	if (fclose(fd))
 		return NULL;
 
-	fc[st.st_size] = '\0';
+	fc[read] = '\0';
 	return fc;
 }
-
-
 
 /**
  * Calls estrndup(3) but terminates the program EXIT_FAILURE if strndup returned
