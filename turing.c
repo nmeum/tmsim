@@ -66,7 +66,7 @@ newtmmap(size_t size)
  * @param key Key that should be hashed.
  * @returns Hash of the given key.
  */
-static int
+static size_t
 hash(tmmap *map, size_t key)
 {
 	/* XXX: A more advanced hashing function could be
