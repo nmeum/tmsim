@@ -323,14 +323,13 @@ scanstr(char *input)
 	scanner *scr;
 
 	scr = emalloc(sizeof(scanner));
-	scr->thread = emalloc(sizeof(pthread_t));
 	scr->tqueue = newqueue();
 	scr->pos = scr->start = scr->column = 0;
 	scr->inlen = strlen(input);
 	scr->input = input;
 	scr->line = 1;
 
-	if (pthread_create(scr->thread, NULL, lexany, (void*)scr))
+	if (pthread_create(&scr->thread, NULL, lexany, (void*)scr))
 		die("pthread_create failed");
 
 	return scr;
@@ -346,12 +345,11 @@ freescanner(scanner *scr)
 {
 	assert(scr);
 
-	if (!pthread_cancel(*scr->thread)) {
-		if (pthread_join(*scr->thread, NULL))
+	if (!pthread_cancel(scr->thread)) {
+		if (pthread_join(scr->thread, NULL))
 			die("pthread_join failed");
 	}
 
-	free(scr->thread);
 	freequeue(scr->tqueue);
 	free(scr);
 }

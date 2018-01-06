@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -40,7 +40,7 @@ struct _scanner {
 	/**
 	 * Thread used to perform lexical scanning of the input string.
 	 */
-	pthread_t *thread;
+	pthread_t thread;
 
 	/**
 	 * Queue to which recognized tokens should be added.
