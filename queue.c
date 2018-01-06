@@ -60,11 +60,8 @@ newqueue(void)
 			|| pthread_spin_init(&qu->tlock, PTHREAD_PROCESS_PRIVATE))
 		die("pthread_spin_init failed");
 
-	qu->fullsem  = emalloc(sizeof(sem_t));
-	qu->emptysem = emalloc(sizeof(sem_t));
-
-	if (sem_init(qu->fullsem, 0, 0)
-			|| sem_init(qu->emptysem, 0, MAXNODES))
+	if (sem_init(&qu->fullsem, 0, 0)
+			|| sem_init(&qu->emptysem, 0, MAXNODES))
 		die("sem_init failed");
 
 	return qu;
@@ -85,12 +82,12 @@ enqueue(queue *qu, token *value)
 	assert(value);
 	nd = newnode(value);
 
-	sem_ewait(qu->emptysem);
+	sem_ewait(&qu->emptysem);
 	pthread_spin_elock(&qu->tlock);
 	qu->tail->next = nd;
 	qu->tail = nd;
 	pthread_spin_eunlock(&qu->tlock);
-	sem_epost(qu->fullsem);
+	sem_epost(&qu->fullsem);
 }
 
 /**
@@ -105,7 +102,7 @@ dequeue(queue *qu)
 	token *ret;
 	node *nd, *newh;
 
-	sem_ewait(qu->fullsem);
+	sem_ewait(&qu->fullsem);
 	pthread_spin_elock(&qu->hlock);
 	nd = qu->head;
 	if (!(newh = nd->next)) {
@@ -116,7 +113,7 @@ dequeue(queue *qu)
 	ret = newh->value;
 	qu->head = newh;
 	pthread_spin_eunlock(&qu->hlock);
-	sem_epost(qu->emptysem);
+	sem_epost(&qu->emptysem);
 
 	free(nd);
 	return ret;
@@ -136,12 +133,9 @@ freequeue(queue *qu)
 	assert(qu);
 
 	if (qu->head) free(qu->head);
-	if (sem_destroy(qu->fullsem) ||
-			sem_destroy(qu->emptysem))
+	if (sem_destroy(&qu->fullsem) ||
+			sem_destroy(&qu->emptysem))
 		die("sem_destroy failed");
-
-	free(qu->fullsem);
-	free(qu->emptysem);
 
 	if (pthread_spin_destroy(&qu->hlock)
 			|| pthread_spin_destroy(&qu->tlock))
