@@ -51,7 +51,7 @@ newtmmap(size_t size)
 
 	map = emalloc(sizeof(tmmap));
 	map->size = size;
-	map->entries = emalloc(sizeof(mapentry) * size);
+	map->entries = emalloc(sizeof(mapentry*) * size);
 
 	for (size_t i = 0; i < size; i++)
 		map->entries[i] = NULL;
