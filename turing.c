@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2017 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -147,7 +147,7 @@ setval(tmmap *map, mapentry *ent)
  * @returns -1 if a value for the given key didn't exist, 0 otherwise.
  */
 static int
-getval(tmmap *map, size_t key, mapentry *dest)
+getval(tmmap *map, size_t key, mapentry **dest)
 {
 	size_t mkey;
 	mapentry *buck, *next;
@@ -162,7 +162,7 @@ getval(tmmap *map, size_t key, mapentry *dest)
 	if (next == NULL)
 		return -1;
 
-	*dest = *next;
+	*dest = next;
 	return 0;
 }
 
@@ -250,15 +250,15 @@ addstate(dtm *tm, tmstate *state)
  * @returns -1 if the state doesn't exist, 0 otherwise.
  */
 int
-getstate(dtm *tm, int name, tmstate *dest)
+getstate(dtm *tm, int name, tmstate **dest)
 {
 	int ret;
-	mapentry entry;
+	mapentry *entry;
 
 	if ((ret = getval(tm->states, name, &entry)))
 		return ret;
 
-	*dest = *entry.data.state;
+	*dest = entry->data.state;
 	return ret;
 }
 
@@ -293,15 +293,15 @@ addtrans(tmstate *state, tmtrans *trans)
  * @returns -1 if a transition with the given symbol doesn't exist, 0 otherwise.
  */
 int
-gettrans(tmstate *state, int rsym, tmtrans *dest)
+gettrans(tmstate *state, int rsym, tmtrans **dest)
 {
 	int ret;
-	mapentry entry;
+	mapentry *entry;
 
 	if ((ret = getval(state->trans, rsym, &entry)))
 		return ret;
 
-	*dest = *entry.data.trans;
+	*dest = entry->data.trans;
 	return ret;
 }
 
@@ -385,8 +385,8 @@ static int
 compute(dtm *tm, tmstate *state)
 {
 	char in;
-	tmtrans trans;
-	static tmstate next; /* static to enable tail call optimization. */
+	tmtrans *trans;
+	static tmstate *next; /* static to enable tail call optimization. */
 
 	if (!tm->tape->next)
 		tm->tape->next = newtapeentry(BLANKCHAR, tm->tape, NULL);
@@ -395,8 +395,8 @@ compute(dtm *tm, tmstate *state)
 	if (gettrans(state, in, &trans))
 		return isaccepting(tm, state->name);
 
-	tm->tape->next->value = trans.wsym;
-	switch (trans.headdir) {
+	tm->tape->next->value = trans->wsym;
+	switch (trans->headdir) {
 	case RIGHT:
 		tm->tape = tm->tape->next;
 		break;
@@ -411,10 +411,10 @@ compute(dtm *tm, tmstate *state)
 		break;
 	}
 
-	if (getstate(tm, trans.nextstate, &next))
-		return isaccepting(tm, trans.nextstate);
+	if (getstate(tm, trans->nextstate, &next))
+		return isaccepting(tm, trans->nextstate);
 
-	return compute(tm, &next);
+	return compute(tm, next);
 }
 
 /**
@@ -428,7 +428,7 @@ compute(dtm *tm, tmstate *state)
 int
 runtm(dtm *tm)
 {
-	tmstate start;
+	tmstate *start;
 
 	/* tm->tape->next is only NULL here if the user supplied the
 	 * empty word as an input for this turing maschine. In that
@@ -436,7 +436,7 @@ runtm(dtm *tm)
 	if (getstate(tm, tm->start, &start) || !tm->tape->next)
 		return isaccepting(tm, tm->start);
 
-	return compute(tm, &start);
+	return compute(tm, start);
 }
 
 /**

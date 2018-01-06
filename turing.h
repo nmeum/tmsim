@@ -127,10 +127,10 @@ dtm *newtm(void);
 tmstate *newtmstate(void);
 
 int addtrans(tmstate*, tmtrans*);
-int gettrans(tmstate*, int, tmtrans*);
+int gettrans(tmstate*, int, tmtrans**);
 
 int addstate(dtm*, tmstate*);
-int getstate(dtm*, int, tmstate*);
+int getstate(dtm*, int, tmstate**);
 
 void writetape(dtm*, char*);
 void printtape(dtm*);
