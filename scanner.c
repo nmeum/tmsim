@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2017 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -252,10 +252,9 @@ lexcomment(scanner *scr) {
 static void*
 lexstate(scanner *scr)
 {
-	char *input, *dest;
+	char *input, *end, old;
 	int col;
 	long value;
-	size_t len;
 
 	input = &scr->input[scr->pos];
 
@@ -264,22 +263,20 @@ lexstate(scanner *scr)
 		nextch(scr);
 	scr->column = col;
 
-	len = scr->pos - scr->start - 1;
-	dest = emalloc(len + 1);
+	end = &scr->input[scr->pos];
+	old = *end;
 
-	strncpy(dest, input, len);
-	dest[len] = '\0';
+	*end = '\0';
+	value = strtol(input, NULL, 10);
+	*end = old;
 
-	value = strtol(dest, NULL, 10);
 	if (value <= INT_MIN)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
 	else if (value >= INT_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
-	free(dest);
-
 	emit(scr, TOK_STATE, (int)value);
-	scr->column += len; /* Initial 'q' and digits. */
 
+	scr->column += end - input; /* Initial 'q' and digits. */
 	return lexany(scr);
 }
 
