@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -55,11 +55,9 @@ newqueue(void)
 
 	qu = emalloc(sizeof(queue));
 	qu->head = qu->tail = newnode(NULL);
-	qu->hlock = emalloc(sizeof(pthread_spinlock_t));
-	qu->tlock = emalloc(sizeof(pthread_spinlock_t));
 
-	if (pthread_spin_init(qu->hlock, PTHREAD_PROCESS_PRIVATE)
-			|| pthread_spin_init(qu->tlock, PTHREAD_PROCESS_PRIVATE))
+	if (pthread_spin_init(&qu->hlock, PTHREAD_PROCESS_PRIVATE)
+			|| pthread_spin_init(&qu->tlock, PTHREAD_PROCESS_PRIVATE))
 		die("pthread_spin_init failed");
 
 	qu->fullsem  = emalloc(sizeof(sem_t));
@@ -88,10 +86,10 @@ enqueue(queue *qu, token *value)
 	nd = newnode(value);
 
 	sem_ewait(qu->emptysem);
-	pthread_spin_elock(qu->tlock);
+	pthread_spin_elock(&qu->tlock);
 	qu->tail->next = nd;
 	qu->tail = nd;
-	pthread_spin_eunlock(qu->tlock);
+	pthread_spin_eunlock(&qu->tlock);
 	sem_epost(qu->fullsem);
 }
 
@@ -108,16 +106,16 @@ dequeue(queue *qu)
 	node *nd, *newh;
 
 	sem_ewait(qu->fullsem);
-	pthread_spin_elock(qu->hlock);
+	pthread_spin_elock(&qu->hlock);
 	nd = qu->head;
 	if (!(newh = nd->next)) {
-		pthread_spin_eunlock(qu->hlock);
+		pthread_spin_eunlock(&qu->hlock);
 		return NULL;
 	}
 
 	ret = newh->value;
 	qu->head = newh;
-	pthread_spin_eunlock(qu->hlock);
+	pthread_spin_eunlock(&qu->hlock);
 	sem_epost(qu->emptysem);
 
 	free(nd);
@@ -145,11 +143,9 @@ freequeue(queue *qu)
 	free(qu->fullsem);
 	free(qu->emptysem);
 
-	if (pthread_spin_destroy(qu->hlock)
-			|| pthread_spin_destroy(qu->tlock))
+	if (pthread_spin_destroy(&qu->hlock)
+			|| pthread_spin_destroy(&qu->tlock))
 		die("pthread_spin_destroy failed");
 
-	free(qu->hlock);
-	free(qu->tlock);
 	free(qu);
 }

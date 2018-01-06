@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -52,8 +52,8 @@ struct _queue {
 	sem_t *fullsem;  /**< Represents number of elements in the queue. */
 	sem_t *emptysem; /**< Represents number of empty places in the queue. */
 
-	pthread_spinlock_t *hlock; /**< Prevents concurrent access of head. */
-	pthread_spinlock_t *tlock; /**< Prevents concurrent access of tail. */
+	pthread_spinlock_t hlock; /**< Prevents concurrent access of head. */
+	pthread_spinlock_t tlock; /**< Prevents concurrent access of tail. */
 };
 
 queue *newqueue(void);
