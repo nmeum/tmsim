@@ -109,11 +109,11 @@ main(int argc, char **argv)
 		return 1;
 	}
 
-	if (argc <= 2 || ++optind >= argc)
-		return 0;
-
 	free(fc);
 	freeparser(par);
+
+	if (argc <= 2 || ++optind >= argc)
+		return 0;
 
 	in = argv[optind];
 	if (!verifyinput(in, &pos))
