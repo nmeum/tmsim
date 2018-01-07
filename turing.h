@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -17,8 +17,8 @@
  */
 
 enum {
-	STATEMAPSIZ = 512,	/**< Amount of buckets in the state map. */
-	TRANSMAPSIZ = 256,	/**< Amount of buckets in the transition map. */
+	STATEMAPSIZ = 128,	/**< Amount of buckets in the state map. */
+	TRANSMAPSIZ = 16,	/**< Amount of buckets in the transition map. */
 	MAXACCEPT = 512,	/**< Max amount of items in the accept state array. */
 	BLANKCHAR = '$',	/**< Character used to represent blanks on the tape. */
 };
