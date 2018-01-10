@@ -175,7 +175,7 @@ getval(tmmap *map, mapkey key, mapentry **dest)
  * @returns Pointer to the newly created tape entry.
  */
 static tapeentry*
-newtapeentry(char value, tapeentry *prev, tapeentry *next)
+newtapeentry(unsigned char value, tapeentry *prev, tapeentry *next)
 {
 	tapeentry *entr;
 
@@ -311,7 +311,7 @@ addtrans(tmstate *state, tmtrans *trans)
  * @returns -1 if a transition with the given symbol doesn't exist, 0 otherwise.
  */
 int
-gettrans(tmstate *state, int rsym, tmtrans **dest)
+gettrans(tmstate *state, unsigned char rsym, tmtrans **dest)
 {
 	int ret;
 	mapentry *entry;
@@ -340,7 +340,7 @@ writetape(dtm *tm, char *str)
 		last = i;
 
 	while ((c = *str++)) {
-		ent = newtapeentry(c, last, NULL);
+		ent = newtapeentry((unsigned char)c, last, NULL);
 		last->next = ent;
 		last = ent;
 	}
@@ -402,8 +402,8 @@ isaccepting(dtm *tm, tmname name)
 static int
 compute(dtm *tm, tmstate *state)
 {
-	char in;
 	tmtrans *trans;
+	unsigned char in;
 	static tmstate *next; /* static to enable tail call optimization. */
 
 	if (!tm->tape->next)

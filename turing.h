@@ -86,14 +86,14 @@ struct _tmtrans {
 	/**
 	 * Symbol which needs to be read to trigger this transition.
 	 */
-	char rsym;
+	unsigned char rsym;
 
 	/**
 	 * Symbol which should be written on the tape when performing this
 	 * tranisition. The symbol which triggers this transition is not
 	 * stored in this struct and is used as a key in the tmmap instead.
 	 */
-	char wsym;
+	unsigned char wsym;
 
 	/**
 	 * Direction to move head to after performing this transition.
@@ -114,7 +114,7 @@ struct _tmtrans {
 typedef struct _tapeentry tapeentry;
 
 struct _tapeentry {
-	char value;		/**< Symbol for this tape entry. */
+	unsigned char value;	/**< Symbol for this tape entry. */
 	tapeentry *next;	/**< Entry on the right-hand side of this one. */
 	tapeentry *prev;	/**< Entry on the left-hand side of this one. */
 };
@@ -138,7 +138,7 @@ tmstate *newtmstate(void);
 void addaccept(dtm*, tmname);
 
 int addtrans(tmstate*, tmtrans*);
-int gettrans(tmstate*, int, tmtrans**);
+int gettrans(tmstate*, unsigned char, tmtrans**);
 
 int addstate(dtm*, tmstate*);
 int getstate(dtm*, tmname, tmstate**);
