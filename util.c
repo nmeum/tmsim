@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2017 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -162,6 +162,24 @@ emalloc(size_t size)
 
 	if (!(r = malloc(size)))
 		die("malloc failed");
+
+	return r;
+}
+
+/**
+ * Calls realloc(3) but terminates the program with EXIT_FAILURE if realloc
+ * returned an error.
+ *
+ * @param size Amount of memory (in bytes) which should be allocated.
+ * @returns Pointer to the allocated memory.
+ */
+void*
+erealloc(void *ptr, size_t size)
+{
+	void *r;
+
+	if (!(r = realloc(ptr, size)))
+		die("realloc failed");
 
 	return r;
 }

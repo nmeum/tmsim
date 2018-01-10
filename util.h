@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -28,8 +28,9 @@ int xstrncmp(char*, char*, size_t, size_t*);
 char *readfile(char*);
 char *mark(size_t, char*);
 
-char *estrndup(char *s, size_t n);
-void *emalloc(size_t size);
+char *estrndup(char*, size_t);
+void *emalloc(size_t);
+void *erealloc(void*, size_t);
 
 void pthread_spin_elock(pthread_spinlock_t*);
 void pthread_spin_eunlock(pthread_spinlock_t*);
