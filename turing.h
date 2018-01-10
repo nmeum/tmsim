@@ -43,7 +43,7 @@ typedef struct _tmtrans tmtrans; /**< Transition from one state to another. */
 /**
  * Type used as a key for the ::tmmap.
  */
-typedef int mapkey;
+typedef unsigned int mapkey;
 
 /**
  * Entry in a bucket hashing implementation.
