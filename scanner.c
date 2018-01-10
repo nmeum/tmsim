@@ -304,7 +304,7 @@ lexterm(scanner *scr, char *ter, toktype tkt)
 		emit(scr, TOK_ERROR, ERR_UNEXPECTED);
 	}
 
-	scr->pos += len;
+	scr->pos += --len;
 	scr->start = scr->pos;
 
 	scr->column += len;
