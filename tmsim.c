@@ -105,7 +105,7 @@ main(int argc, char **argv)
 
 	tm = newtm();
 	if ((ret = parsetm(par, tm)) != PAR_OK) {
-		strparerr(par, ret, fp, stdout);
+		strparerr(par, ret, fp, stderr);
 		return EXIT_FAILURE;
 	}
 
