@@ -47,17 +47,17 @@ struct _scanner {
 	 */
 	queue *tqueue;
 
-	size_t pos;	/**< Current position in the input string. **/
-	size_t start;	/**< Start position of current token in input string. */
-	size_t inlen;	/**< Length of the input string. */
+	size_t pos;		/**< Current position in the input string. **/
+	size_t start;		/**< Start position of current token in input string. */
+	size_t inlen;		/**< Length of the input string. */
 
-	char *input;	/**< Input string passed to scanstr. */
+	char *input;		/**< Input string passed to scanstr. */
 
-	int line;	/**< Line number the scanner is currently analyzing. */
-	int column;	/**< Column the scanner is currently analyzing. */
+	unsigned int line;	/**< Line number the scanner is currently analyzing. */
+	unsigned int column;	/**< Column the scanner is currently analyzing. */
 };
 
 scanner *scanstr(char*);
 token *nexttoken(scanner*);
 void freescanner(scanner*);
-char* linenum(scanner*, int);
+char* linenum(scanner*, unsigned int);

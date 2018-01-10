@@ -253,7 +253,7 @@ static void*
 lexstate(scanner *scr)
 {
 	char *input, *end, old;
-	int col;
+	unsigned int col;
 	long value;
 
 	input = &scr->input[scr->pos];
@@ -379,7 +379,7 @@ nexttoken(scanner *scr)
  * 	the content of the given line if it exists. NULL if it doesn't.
  */
 char*
-linenum(scanner *scr, int line)
+linenum(scanner *scr, unsigned int line)
 {
 	char ch, *res;
 	size_t end, prev, newline;
