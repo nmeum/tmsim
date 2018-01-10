@@ -81,7 +81,7 @@ ignore(scanner *scr)
 }
 
 /**
- * Whether or not the current character is a valid turing maschine input
+ * Whether or not the current character is a valid turing machine input
  * symbol. Which is the case if it is either an alphanumeric character
  * or the special blank character.
  *

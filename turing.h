@@ -32,7 +32,7 @@ typedef enum {
 	STAY,	/**< Don't move head at all. */
 } direction;
 
-typedef struct _tmstate tmstate; /**< State of a turing maschine. */
+typedef struct _tmstate tmstate; /**< State of a turing machine. */
 typedef struct _tmtrans tmtrans; /**< Transition from one state to another. */
 
 /**
@@ -91,7 +91,7 @@ struct _tmtrans {
 	direction headdir;
 
 	/**
-	 * Name of the state the turing maschine switches to after writing
+	 * Name of the state the turing machine switches to after writing
 	 * the associated symbol to the tape and moving the head to the
 	 * associated direction.
 	 */
@@ -99,7 +99,7 @@ struct _tmtrans {
 };
 
 /**
- * Double linked list used for entries on the tape of the turing maschine.
+ * Double linked list used for entries on the tape of the turing machine.
  */
 typedef struct _tapeentry tapeentry;
 
@@ -110,17 +110,17 @@ struct _tapeentry {
 };
 
 /**
- * Deterministic turing maschine implementation.
+ * Deterministic turing machine implementation.
  */
 typedef struct _dtm dtm;
 
 struct _dtm {
-	tapeentry *tape;	/**< Current tape content of this turing maschine. */
-	tmmap *states;		/**< States of this turing maschine. */
-	int start;		/**< Initial state for this turing maschine. */
+	tapeentry *tape;	/**< Current tape content of this turing machine. */
+	tmmap *states;		/**< States of this turing machine. */
+	int start;		/**< Initial state for this turing machine. */
 
-	size_t acceptsiz;	/**< Amount of accepting state of this turing maschine. */
-	int *accept;		/**< Accepting states of this turing maschine. */
+	size_t acceptsiz;	/**< Amount of accepting state of this turing machine. */
+	int *accept;		/**< Accepting states of this turing machine. */
 };
 
 dtm *newtm(void);
