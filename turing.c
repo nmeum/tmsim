@@ -197,7 +197,7 @@ newtmstate(void)
 	tmstate *state;
 
 	state = emalloc(sizeof(tmstate));
-	state->name = -1;
+	state->name = 0;
 	state->trans = newtmmap(TRANSMAPSIZ);
 	return state;
 }

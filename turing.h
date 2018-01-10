@@ -25,10 +25,8 @@ enum {
 
 /**
  * Type used for turing machine state names.
- *
- * @todo Make this an unsigned type.
  */
-typedef int tmname;
+typedef unsigned int tmname;
 
 /**
  * Enum describing direction head should be moved in.
