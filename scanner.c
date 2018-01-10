@@ -299,7 +299,8 @@ lexterm(scanner *scr, char *ter, toktype tkt)
 	if (!xstrncmp(ter, &scr->input[scr->start], len, &pos)) {
 		emit(scr, tkt, TOKNOP);
 	} else {
-		scr->column = ++pos;
+		assert(pos + 1 < UINT_MAX);
+		scr->column = (unsigned int)++pos;
 		emit(scr, TOK_ERROR, ERR_UNEXPECTED);
 	}
 
