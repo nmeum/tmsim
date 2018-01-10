@@ -110,17 +110,18 @@ readfile(char *fp)
 {
 	FILE *fd;
 	char *fc;
-	size_t read;
 	struct stat st;
+	size_t len, read;
 
 	if (stat(fp, &st))
 		return NULL;
+	len = (size_t)st.st_size;
 
-	fc = emalloc(st.st_size + 1);
+	fc = emalloc(len + 1);
 	if (!(fd = fopen(fp, "r")))
 		return NULL;
 
-	read = fread(fc, sizeof(char), st.st_size, fd);
+	read = fread(fc, sizeof(char), len, fd);
 	if (ferror(fd))
 		return NULL;
 	if (fclose(fd))
