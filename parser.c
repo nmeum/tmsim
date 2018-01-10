@@ -129,12 +129,10 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	if (tok->type == TOK_ERROR) {
 		switch (tok->value) {
 		case ERR_OVERFLOW:
-			msg = "Integer overflow while converting "
-				"a numeric state name to an int";
+			msg = "Numeric state name excceds UCHAR_MAX.";
 			goto ret;
 		case ERR_UNDERFLOW:
-			msg = "Integer underflow while converting "
-				"a numeric state name to an int.";
+			msg = "Numeric state names can't be negative.";
 			goto ret;
 		case ERR_UNKOWN:
 			msg = "Lexer encountered an unkown character.";
