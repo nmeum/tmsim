@@ -41,12 +41,17 @@ typedef struct _tmstate tmstate; /**< State of a turing machine. */
 typedef struct _tmtrans tmtrans; /**< Transition from one state to another. */
 
 /**
+ * Type used as a key for the ::tmmap.
+ */
+typedef int mapkey;
+
+/**
  * Entry in a bucket hashing implementation.
  */
 typedef struct _mapentry mapentry;
 
 struct _mapentry {
-	size_t key;	/**< Key of this entry. */
+	mapkey key;	/**< Key of this entry. */
 
 	/**
 	 * If there was a hash collision bucket hashing is used which means

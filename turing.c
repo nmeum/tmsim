@@ -67,7 +67,7 @@ newtmmap(size_t size)
  * @returns Hash of the given key.
  */
 static size_t
-hash(tmmap *map, size_t key)
+hash(tmmap *map, mapkey key)
 {
 	/* XXX: A more advanced hashing function could be
 	 * used here but this is good enough for now. */
@@ -81,7 +81,7 @@ hash(tmmap *map, size_t key)
  * @returns Pointer to initialized mapentry.
  */
 static mapentry*
-newmapentry(size_t key)
+newmapentry(mapkey key)
 {
 	mapentry *ent;
 
@@ -118,12 +118,12 @@ freemapentry(mapentry *ent)
 static int
 setval(tmmap *map, mapentry *ent)
 {
-	size_t mkey;
+	size_t idx;
 	mapentry *buck, *last, *next;
 
-	mkey = hash(map, ent->key);
-	if (!(buck = map->entries[mkey])) {
-		map->entries[mkey] = ent;
+	idx = hash(map, ent->key);
+	if (!(buck = map->entries[idx])) {
+		map->entries[idx] = ent;
 		return 0;
 	}
 
@@ -147,13 +147,13 @@ setval(tmmap *map, mapentry *ent)
  * @returns -1 if a value for the given key didn't exist, 0 otherwise.
  */
 static int
-getval(tmmap *map, size_t key, mapentry **dest)
+getval(tmmap *map, mapkey key, mapentry **dest)
 {
-	size_t mkey;
+	size_t idx;
 	mapentry *buck, *next;
 
-	mkey = hash(map, key);
-	if (!(buck = map->entries[mkey]))
+	idx = hash(map, key);
+	if (!(buck = map->entries[idx]))
 		return -1;
 
 	for (next = buck; next != NULL && next->key != key; next = next->next)
