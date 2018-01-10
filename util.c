@@ -72,7 +72,7 @@ mark(size_t pos, char *str)
  * @param res Pointer to an address where the position of
  * 	the first character that differed should be stored.
  * 	The first element is located at position 0.
- * @returns an integer less than, equal to, or greater than
+ * @returns An integer less than, equal to, or greater than
  * 	zero if s1 (or the first n bytes thereof) is found,
  *	respectively, to be less than, to match, or be greater than s2.
  */
@@ -88,11 +88,7 @@ xstrncmp(char *s1, char *s2, size_t n, size_t *res)
 		i++;
 	}
 
-	if (*s1 == *s2) {
-		*res = --i;
-		return 0;
-	}
-
+	*res = --i;
 	return *s1 - *s2;
 }
 
