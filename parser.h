@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -61,7 +61,6 @@ typedef enum {
 	PAR_INITALSTATE,	/**< Parser didn't find an initial state. */
 
 	PAR_ACCEPTKEY,		/**< Parser didn't encounter 'accept:' keyword. */
-	PAR_TOOMANYACCEPT,	/**< Amount of accepting states exceeds MAXACCEPT. */
 	PAR_NONSTATEACCEPT,	/**< Accepting state list contains a non-state token. */
 
 	PAR_STATEDEF,           /**< Expected statename for state definition. */

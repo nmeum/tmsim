@@ -19,7 +19,7 @@
 enum {
 	STATEMAPSIZ = 128,	/**< Amount of buckets in the state map. */
 	TRANSMAPSIZ = 16,	/**< Amount of buckets in the transition map. */
-	MAXACCEPT = 512,	/**< Max amount of items in the accept state array. */
+	ACCEPTSTEP = 8,		/**< Initial amount of accept states (later resized with realloc). */
 	BLANKCHAR = '$',	/**< Character used to represent blanks on the tape. */
 };
 
@@ -120,11 +120,12 @@ struct _dtm {
 	int start;		/**< Initial state for this turing maschine. */
 
 	size_t acceptsiz;	/**< Amount of accepting state of this turing maschine. */
-	int accept[MAXACCEPT];	/**< Accepting states of this turing maschine. */
+	int *accept;		/**< Accepting states of this turing maschine. */
 };
 
 dtm *newtm(void);
 tmstate *newtmstate(void);
+void addaccept(dtm*, int);
 
 int addtrans(tmstate*, tmtrans*);
 int gettrans(tmstate*, int, tmtrans**);

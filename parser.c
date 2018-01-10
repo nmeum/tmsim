@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -177,10 +177,6 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 			"one or more accepting states using the "
 			"'accept:' keyword.";
 		return fprintf(stream, "%s: %s\n", fn, msg);
-	case PAR_TOOMANYACCEPT:
-		msg = "You defined too many accepting states, the maximum "
-			"number of accepting states is hard-coded.";
-		break;
 	case PAR_NONSTATEACCEPT:
 		msg = "Your accepting state list contains a token which is "
 			"not a state name or is empty.";
@@ -280,8 +276,6 @@ freeparser(parser *par)
 static parerr
 parsemeta(parser *par, dtm *dest)
 {
-	size_t i;
-
 	par->tok = next(par);
 	if (par->tok->type != TOK_START)
 		return PAR_STARTKEY;
@@ -297,22 +291,17 @@ parsemeta(parser *par, dtm *dest)
 	if (par->tok->type != TOK_ACCEPT)
 		return PAR_ACCEPTKEY;
 
-	i = 0;
 	do {
 		par->tok = next(par);
-		if (i > MAXACCEPT)
-			return PAR_TOOMANYACCEPT;
-
 		if (par->tok->type != TOK_STATE)
 			return PAR_NONSTATEACCEPT;
-		dest->accept[i++] = par->tok->value;
+		addaccept(dest, par->tok->value);
 
 		par->tok = next(par);
 	} while (par->tok->type == TOK_COMMA &&
 		par->tok->type != TOK_SEMICOLON);
 
 	EXPSEM(par->tok);
-	dest->acceptsiz = i;
 
 	return PAR_OK;
 }

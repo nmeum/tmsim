@@ -216,11 +216,29 @@ newtm(void)
 	tm->states = newtmmap(STATEMAPSIZ);
 	tm->start = tm->acceptsiz = 0;
 	tm->tape = newtapeentry(BLANKCHAR, NULL, NULL);
+	tm->accept = emalloc(ACCEPTSTEP * sizeof(int));
+	tm->acceptsiz = 0;
 	return tm;
 }
 
 /**
- * Adds a new state to an exsting turing maschine.
+ * Adds an accepting state (identified by name) to a turing maschine.
+ *
+ * @param tm Turing maschine to which the state should be added.
+ * @param state Name of the state.
+ */
+void
+addaccept(dtm *tm, int state)
+{
+	if (tm->acceptsiz && tm->acceptsiz % ACCEPTSTEP == 0)
+		tm->accept = erealloc(tm->accept,
+			(tm->acceptsiz + ACCEPTSTEP) * sizeof(int));
+
+	tm->accept[tm->acceptsiz++] = state;
+}
+
+/**
+ * Adds a new state to an existing turing maschine.
  *
  * @param tm Turing maschine to which a state should be added.
  * @param state State which should be added to the turing maschine.
