@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -56,11 +56,11 @@ typedef enum {
 typedef struct _token token;
 
 struct _token {
-	toktype type;	/**< Type of this token (see above). */
-	int value;	/**< Value of this token. */
+	toktype type;		/**< Type of this token (see above). */
+	int value;		/**< Value of this token. */
 
-	int line;	/**< Line in input file the token is located at. */
-	int column;	/**< Column in input file the token is located at. */
+	unsigned int line;	/**< Line in input file the token is located at. */
+	unsigned int column;	/**< Column in input file the token is located at. */
 };
 
 void freetoken(token*);
