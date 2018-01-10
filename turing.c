@@ -228,7 +228,7 @@ newtm(void)
  * @param state Name of the state.
  */
 void
-addaccept(dtm *tm, int state)
+addaccept(dtm *tm, tmname state)
 {
 	if (tm->acceptsiz && tm->acceptsiz % ACCEPTSTEP == 0)
 		tm->accept = erealloc(tm->accept,
@@ -268,7 +268,7 @@ addstate(dtm *tm, tmstate *state)
  * @returns -1 if the state doesn't exist, 0 otherwise.
  */
 int
-getstate(dtm *tm, int name, tmstate **dest)
+getstate(dtm *tm, tmname name, tmstate **dest)
 {
 	int ret;
 	mapentry *entry;
@@ -382,7 +382,7 @@ printtape(dtm *tm)
  * @returns 0 if it does, -1 if it doesn't.
  */
 static int
-isaccepting(dtm *tm, int name)
+isaccepting(dtm *tm, tmname name)
 {
 	for (size_t i = 0; i < tm->acceptsiz; i++)
 		if (tm->accept[i] == name)

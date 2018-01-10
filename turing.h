@@ -24,7 +24,14 @@ enum {
 };
 
 /**
- * Enum discribing direction head should be moved in.
+ * Type used for turing machine state names.
+ *
+ * @todo Make this an unsigned type.
+ */
+typedef int tmname;
+
+/**
+ * Enum describing direction head should be moved in.
  */
 typedef enum {
 	RIGHT,	/**< Move head right. */
@@ -68,7 +75,7 @@ struct _tmmap {
 };
 
 struct _tmstate {
-	int name;	/**< Name of this tmstate. */
+	tmname name;	/**< Name of this tmstate. */
 	tmmap *trans;	/**< Transitions for this state. */
 };
 
@@ -95,7 +102,7 @@ struct _tmtrans {
 	 * the associated symbol to the tape and moving the head to the
 	 * associated direction.
 	 */
-	int nextstate;
+	tmname nextstate;
 };
 
 /**
@@ -117,21 +124,21 @@ typedef struct _dtm dtm;
 struct _dtm {
 	tapeentry *tape;	/**< Current tape content of this turing machine. */
 	tmmap *states;		/**< States of this turing machine. */
-	int start;		/**< Initial state for this turing machine. */
+	tmname start;		/**< Name of initial state for this turing machine. */
 
 	size_t acceptsiz;	/**< Amount of accepting state of this turing machine. */
-	int *accept;		/**< Accepting states of this turing machine. */
+	tmname *accept;		/**< Name of accepting states of this turing machine. */
 };
 
 dtm *newtm(void);
 tmstate *newtmstate(void);
-void addaccept(dtm*, int);
+void addaccept(dtm*, tmname);
 
 int addtrans(tmstate*, tmtrans*);
 int gettrans(tmstate*, int, tmtrans**);
 
 int addstate(dtm*, tmstate*);
-int getstate(dtm*, int, tmstate**);
+int getstate(dtm*, tmname, tmstate**);
 
 void writetape(dtm*, char*);
 void printtape(dtm*);
