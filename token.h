@@ -57,7 +57,7 @@ typedef struct _token token;
 
 struct _token {
 	toktype type;		/**< Type of this token (see above). */
-	int value;		/**< Value of this token. */
+	unsigned char value;	/**< Value of this token. */
 
 	unsigned int line;	/**< Line in input file the token is located at. */
 	unsigned int column;	/**< Column in input file the token is located at. */

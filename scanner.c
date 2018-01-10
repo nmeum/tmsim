@@ -101,7 +101,7 @@ issymbol(char c)
  * @param value Value of the token, should be greater than or equal to zero.
  */
 static void
-emit(scanner *scr, toktype tkt, int value)
+emit(scanner *scr, toktype tkt, unsigned char value)
 {
 	token *tok;
 
@@ -109,7 +109,7 @@ emit(scanner *scr, toktype tkt, int value)
 	tok->type = tkt;
 	tok->line = scr->line;
 	tok->column = scr->column;
-	tok->value = (value == TOKAUTO) ? scr->input[scr->start] : value;
+	tok->value = value;
 
 	enqueue(scr->tqueue, tok);
 	scr->start = scr->pos;
@@ -146,25 +146,25 @@ lexany(void *pscr)
 	case '#':
 		return lexcomment(scr);
 	case ',':
-		emit(scr, TOK_COMMA, TOKAUTO);
+		emit(scr, TOK_COMMA, TOKAUTO(scr));
 		return lexany(scr);
 	case ';':
-		emit(scr, TOK_SEMICOLON, TOKAUTO);
+		emit(scr, TOK_SEMICOLON, TOKAUTO(scr));
 		return lexany(scr);
 	case '{':
-		emit(scr, TOK_LBRACKET, TOKAUTO);
+		emit(scr, TOK_LBRACKET, TOKAUTO(scr));
 		return lexany(scr);
 	case '}':
-		emit(scr, TOK_RBRACKET, TOKAUTO);
+		emit(scr, TOK_RBRACKET, TOKAUTO(scr));
 		return lexany(scr);
 	case '<':
-		emit(scr, TOK_SMALLER, TOKAUTO);
+		emit(scr, TOK_SMALLER, TOKAUTO(scr));
 		return lexany(scr);
 	case '>':
-		emit(scr, TOK_GREATER, TOKAUTO);
+		emit(scr, TOK_GREATER, TOKAUTO(scr));
 		return lexany(scr);
 	case '|':
-		emit(scr, TOK_PIPE, TOKAUTO);
+		emit(scr, TOK_PIPE, TOKAUTO(scr));
 		return lexany(scr);
 	case 'q':
 		if (isdigit(peekch(scr)))
@@ -180,7 +180,7 @@ lexany(void *pscr)
 	}
 
 	if (issymbol(nxt) && !issymbol(peekch(scr))) {
-		emit(scr, TOK_SYMBOL, TOKAUTO);
+		emit(scr, TOK_SYMBOL, TOKAUTO(scr));
 		return lexany(scr);
 	} else if (isspace(nxt)) {
 		return lexspace(scr);
@@ -270,11 +270,11 @@ lexstate(scanner *scr)
 	value = strtol(input, NULL, 10);
 	*end = old;
 
-	if (value <= INT_MIN)
+	if (value < 0)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
-	else if (value >= INT_MAX)
+	else if (value >= UCHAR_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
-	emit(scr, TOK_STATE, (int)value);
+	emit(scr, TOK_STATE, (unsigned char)value);
 
 	scr->column += end - input; /* Initial 'q' and digits. */
 	return lexany(scr);

@@ -16,19 +16,22 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Can be used in conjunction with emit if the character in the input
+ * string at the start position of this token should be used as the
+ * value field of the enqueued token.
+ *
+ * @param SCANNER Scanner for which a value should be emitted.
+ */
+#define TOKAUTO(SCANNER) \
+	((unsigned char)SCANNER->input[scr->start])
+
 enum {
 	/**
-	 * Passed to emit (as value) if the character in the input string at
-	 * the start position of this token should be used as the value field
-	 * of the enqueued token.
+	 * Passed to emit (as value) if the token doesn't have a
+	 * meaningful character value.
 	 */
-	TOKAUTO = -1,
-
-	/**
-	 * Passed to emit (as value) if the token doesn't have a meaningful
-	 * character value.
-	 */
-	TOKNOP = -2,
+	TOKNOP = 0,
 };
 
 /**
