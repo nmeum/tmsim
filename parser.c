@@ -283,7 +283,8 @@ parsemeta(parser *par, dtm *dest)
 		return PAR_INITALSTATE;
 	dest->start = par->tok->value;
 
-	EXPSEM(next(par));
+	par->tok = next(par);
+	EXPSEM(par->tok);
 
 	par->tok = next(par);
 	if (par->tok->type != TOK_ACCEPT)
@@ -400,7 +401,8 @@ parsestate(parser *par, tmstate *dest)
 			return PAR_TRANSDEFTWICE;
 		}
 
-		EXPSEM(next(par));
+		par->tok = next(par);
+		EXPSEM(par->tok);
 	}
 
 	par->tok = next(par);
