@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2017 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -88,7 +88,7 @@ main(int argc, char **argv)
 			break;
 		case 'v':
 			fprintf(stderr, "tmsim-"VERSION"\n");
-			return 1;
+			return EXIT_FAILURE;
 		case 'h':
 		default:
 			usage(argv[0]);
@@ -106,21 +106,21 @@ main(int argc, char **argv)
 	tm = newtm();
 	if ((ret = parsetm(par, tm)) != PAR_OK) {
 		strparerr(par, ret, fp, stdout);
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	free(fc);
 	freeparser(par);
 
 	if (argc <= 2 || ++optind >= argc)
-		return 0;
+		return EXIT_SUCCESS;
 
 	in = argv[optind];
 	if (!verifyinput(in, &pos))
 		inputerr(in, pos);
 	writetape(tm, in);
 
-	ext = (runtm(tm)) ? 1 : 0;
+	ext = (runtm(tm)) ? EXIT_FAILURE : EXIT_SUCCESS;
 	if (rtape)
 		printtape(tm);
 
