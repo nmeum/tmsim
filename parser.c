@@ -229,7 +229,7 @@ ret:
 		return fprintf(stream, "%s\n", msg);
 	}
 
- 	/* tok->column starts at position 1. */
+	/* tok->column starts at position 1. */
 	marker = mark(tok->column - 1, line);
 	r = fprintf(stream, "%s:%d:%d: %s\n %s\n %s\n", fn, tok->line,
 			tok->column, msg, line, marker);
