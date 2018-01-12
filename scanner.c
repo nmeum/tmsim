@@ -133,14 +133,18 @@ lexany(void *pscr)
 
 	scr->column++;
 	if ((nxt = nextch(scr)) == -1) {
+		scr->line = 0;
+		scr->column = 0;
+
 		emit(scr, TOK_EOF, TOKNOP);
 		return NULL;
 	}
 
 	switch (nxt) {
 	case '\n':
-		scr->column = 0;
 		scr->line++;
+		scr->column = 0;
+
 		ignore(scr);
 		return lexany(scr);
 	case '#':
