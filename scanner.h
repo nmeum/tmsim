@@ -32,6 +32,12 @@ enum {
 	 * meaningful character value.
 	 */
 	TOKNOP = 0,
+
+	/**
+	 * Amount of bytes needed for a string representation of the
+	 * ::tmname type plus one byte for null termination.
+	 */
+	STATELEN = 4,
 };
 
 /**

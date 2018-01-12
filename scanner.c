@@ -252,8 +252,9 @@ lexcomment(scanner *scr) {
 static void*
 lexstate(scanner *scr)
 {
-	char *input, *end, old;
+	char *input, buf[STATELEN];
 	unsigned int col;
+	size_t len;
 	long value;
 
 	input = &scr->input[scr->pos];
@@ -263,20 +264,25 @@ lexstate(scanner *scr)
 		nextch(scr);
 	scr->column = col;
 
-	end = &scr->input[scr->pos];
-	old = *end;
+	len = scr->pos - scr->start - 1;
+	if (len > STATELEN - 1) {
+		emit(scr, TOK_ERROR, ERR_OVERFLOW);
+		goto ret;
+	}
 
-	*end = '\0';
-	value = strtol(input, NULL, 10);
-	*end = old;
+	strncpy(buf, input, len);
+	buf[len] = '\0';
 
+	value = strtol(buf, NULL, 10);
 	if (value < 0)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
 	else if (value >= UCHAR_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
-	emit(scr, TOK_STATE, (unsigned char)value);
+	else
+		emit(scr, TOK_STATE, (unsigned char)value);
 
-	scr->column += end - input; /* Initial 'q' and digits. */
+ret:
+	scr->column += len; /* Initial 'q' and digits. */
 	return lexany(scr);
 }
 
