@@ -17,6 +17,7 @@
  */
 
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
@@ -103,6 +104,25 @@ linenum(char *str, unsigned int line)
 
 	res = estrndup(&str[prev], len);
 	return res;
+}
+
+/**
+ * Returns the index of the last character in the given line.
+ *
+ * @param line Line for which last character should be returned.
+ * @return Index of the last character in the given line.
+ */
+size_t
+endofline(char *line)
+{
+	char *pos;
+
+	if (!(pos = strchr(line, '\n')))
+		pos = strchr(line, '\0');
+	assert(pos != NULL);
+
+	assert(pos - line >= 0);
+	return (size_t)(pos - line);
 }
 
 /**
