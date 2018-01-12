@@ -27,6 +27,7 @@
 int xstrncmp(char*, char*, size_t, size_t*);
 char *readfile(char*);
 char *mark(size_t, char*);
+char* linenum(char*, unsigned int);
 
 char *estrndup(char*, size_t);
 void *emalloc(size_t);

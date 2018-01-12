@@ -223,7 +223,7 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	}
 
 ret:
-	if (!(line = linenum(par->scr, tok->line))) {
+	if (!(line = linenum(par->scr->input, tok->line))) {
 		msg = "Current token contains an invalid line number. "
 			"This is a bug, please consider reporting it.";
 		return fprintf(stream, "%s\n", msg);

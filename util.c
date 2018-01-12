@@ -62,6 +62,50 @@ mark(size_t pos, char *str)
 }
 
 /**
+ * Returns the content of the line with the given line number.
+ *
+ * @param str Input string containing line.
+ * @param line Line number.
+ * @return A pointer to a dynamically allocated string containing
+ * 	the content of the given line if it exists. NULL if it doesn't.
+ */
+char*
+linenum(char *str, unsigned int line)
+{
+	size_t len;
+	char ch, *res;
+	size_t end, prev, newline;
+
+	if (line < 1)
+		return NULL;
+	len = strlen(str);
+
+	newline = prev = 0;
+	for (end = 0; end <= len; end++) {
+		ch = str[end];
+		if (ch != '\n' && ch != '\0')
+			continue;
+
+		if (--line == 0) {
+			prev = newline++;
+			break;
+		} else {
+			newline = end + 1;
+		}
+	}
+
+	if (line != 0)
+		return NULL;
+
+	len = end - prev;
+	if (len == 0) /* \n\0 */
+		return NULL;
+
+	res = estrndup(&str[prev], len);
+	return res;
+}
+
+/**
  * Compares the first 'n' bytes of two strings (like strncmp(3)).
  * However, unlike strncmp(3) it returns the position of the
  * first character that differed.
