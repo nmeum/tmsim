@@ -445,8 +445,10 @@ parsestates(parser *par, dtm *dest)
 			return ret;
 		}
 
-		if (addstate(dest, state))
-			return PAR_STATEDEF;
+		if (addstate(dest, state)) {
+			free(state);
+			return PAR_STATEDEFTWICE;
+		}
 	}
 
 	/* skip and free EOF */
