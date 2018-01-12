@@ -117,6 +117,7 @@ int
 strparerr(parser *par, parerr err, char *fn, FILE *stream)
 {
 	int r;
+	size_t pos;
 	token *tok;
 	char *msg, *line, *marker;
 
@@ -229,8 +230,12 @@ ret:
 		return fprintf(stream, "%s\n", msg);
 	}
 
-	/* tok->column starts at position 1. */
-	marker = mark(tok->column - 1, line);
+	if (tok->type == TOK_EOF)
+		pos = endofline(line);
+	else
+		pos = tok->column - 1;
+
+	marker = mark(pos, line);
 	r = fprintf(stream, "%s:%d:%d: %s\n %s\n %s\n", fn, tok->line,
 			tok->column, msg, line, marker);
 
