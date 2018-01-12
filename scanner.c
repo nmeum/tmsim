@@ -280,7 +280,7 @@ lexstate(scanner *scr)
 	value = strtol(buf, NULL, 10);
 	if (value < 0)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
-	else if (value >= UCHAR_MAX)
+	else if (value > UCHAR_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
 	else
 		emit(scr, TOK_STATE, (unsigned char)value);
