@@ -44,7 +44,7 @@ static void *lexterm(scanner*, char*, toktype);
  * @param scr Scanner from which character should be read.
  * @returns The next character or -1 if there is none.
  */
-static char
+static signed char
 nextch(scanner *scr)
 {
 	if (scr->pos >= scr->inlen)
@@ -60,10 +60,12 @@ nextch(scanner *scr)
  * @param scr Scanner from which character should be read.
  * @returns The next character or -1 if there is none.
  */
-static char
+static signed char
 peekch(scanner *scr)
 {
-	char nxt = nextch(scr);
+	signed char nxt;
+	
+	nxt = nextch(scr);
 	if (nxt != -1)
 		scr->pos--;
 	return nxt;
@@ -125,7 +127,7 @@ emit(scanner *scr, toktype tkt, unsigned char value)
 static void*
 lexany(void *pscr)
 {
-	char nxt;
+	signed char nxt;
 	scanner *scr = (scanner*)pscr;
 
 	/* Make this function a cancel point. */
