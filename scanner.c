@@ -87,6 +87,7 @@ ignore(scanner *scr)
  * symbol. Which is the case if it is either an alphanumeric character
  * or the special blank character.
  *
+ * @param c Character which should be examined.
  * @returns Non-zero integer if it is, zero if it isn't.
  */
 static int
