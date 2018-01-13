@@ -312,7 +312,7 @@ lexterm(scanner *scr, char *ter, toktype tkt)
 		/* pos should always be < strlen({start:,accept:}) */
 		assert(pos <= UINT_MAX - 1);
 
-		scr->column = (unsigned int)++pos;
+		scr->column += (unsigned int)pos;
 		emit(scr, TOK_ERROR, ERR_UNEXPECTED);
 	}
 
