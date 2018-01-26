@@ -32,10 +32,10 @@
 #include "scanner.h"
 #include "turing.h"
 
-static void *lexspace(scanner*);
-static void *lexcomment(scanner*);
-static void *lexstate(scanner*);
-static void *lexterm(scanner*, char*, toktype);
+static void lexspace(scanner*);
+static void lexcomment(scanner*);
+static void lexstate(scanner*);
+static void lexterm(scanner*);
 
 /**
  * Reads the next character from the input string and increments current
@@ -122,14 +122,12 @@ emit(scanner *scr, toktype tkt, unsigned char value)
  * Tail recursive function parsing the entire input string.
  * Usually passed to pthread_create(3).
  *
- * @param pscr Void pointer to the scanner used for lexing.
- * @returns A null pointer.
+ * @param scr Pointer to the associated scanner.
  */
-static void*
-lexany(void *pscr)
+static void
+lexany(scanner *scr)
 {
 	signed char nxt;
-	scanner *scr = (scanner*)pscr;
 
 	/* Make this function a cancel point. */
 	pthread_testcancel();
@@ -141,7 +139,7 @@ lexany(void *pscr)
 			scr->line--;
 
 		emit(scr, TOK_EOF, TOKNOP);
-		return NULL;
+		LEXRET(scr, NULL);
 	}
 
 	switch (nxt) {
@@ -149,33 +147,33 @@ lexany(void *pscr)
 		scr->column = 0;
 		scr->line++;
 		ignore(scr);
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case '#':
-		return lexcomment(scr);
+		LEXRET(scr, lexcomment);
 	case ',':
 		emit(scr, TOK_COMMA, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case ';':
 		emit(scr, TOK_SEMICOLON, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case '{':
 		emit(scr, TOK_LBRACKET, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case '}':
 		emit(scr, TOK_RBRACKET, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case '<':
 		emit(scr, TOK_SMALLER, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case '>':
 		emit(scr, TOK_GREATER, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case '|':
 		emit(scr, TOK_PIPE, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	case 'q':
 		if (isdigit(peekch(scr)))
-			return lexstate(scr);
+			LEXRET(scr, lexstate);
 	case '=':
 		if (nextch(scr) == '>')
 			emit(scr, TOK_NEXT, TOKNOP);
@@ -183,25 +181,17 @@ lexany(void *pscr)
 			emit(scr, TOK_ERROR, ERR_UNKOWN);
 
 		scr->column++;
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	}
 
 	if (issymbol(nxt) && !issymbol(peekch(scr))) {
 		emit(scr, TOK_SYMBOL, TOKAUTO(scr));
-		return lexany(scr);
+		LEXRET(scr, lexany);
 	} else if (isspace(nxt)) {
-		return lexspace(scr);
+		LEXRET(scr, lexspace);
 	}
 
-	switch (nxt) {
-	case 's':
-		return lexterm(scr, "start:", TOK_START);
-	case 'a':
-		return lexterm(scr, "accept:", TOK_ACCEPT);
-	default:
-		emit(scr, TOK_ERROR, ERR_UNKOWN);
-		return lexany(scr);
-	}
+	LEXRET(scr, lexterm);
 }
 
 /**
@@ -210,9 +200,8 @@ lexany(void *pscr)
  * non-white-space character.
  *
  * @param scr Pointer to the associated scanner.
- * @returns A null pointer.
  */
-static void*
+static void
 lexspace(scanner *scr)
 {
 	while (isspace(peekch(scr))) {
@@ -221,7 +210,7 @@ lexspace(scanner *scr)
 	}
 
 	ignore(scr);
-	return lexany(scr);
+	LEXRET(scr, lexany);
 }
 
 /**
@@ -229,9 +218,8 @@ lexspace(scanner *scr)
  * ASCII symbol '#' and ends with a newline.
  *
  * @param scr Pointer to the associated scanner.
- * @returns A null pointer.
  */
-static void*
+static void
 lexcomment(scanner *scr) {
 	while (peekch(scr) != '\n')
 		if (nextch(scr) == -1)
@@ -243,7 +231,7 @@ lexcomment(scanner *scr) {
 	 * other tokens either (unlike white-spaces). */
 
 	ignore(scr);
-	return lexany(scr);
+	LEXRET(scr, lexany);
 }
 
 /**
@@ -254,9 +242,8 @@ lexcomment(scanner *scr) {
  *
  * @pre The previous char must be the ASCII character 'q'.
  * @param scr Pointer to the associated scanner.
- * @returns A null pointer.
  */
-static void*
+static void
 lexstate(scanner *scr)
 {
 	char *input, buf[STATELEN];
@@ -290,23 +277,37 @@ lexstate(scanner *scr)
 
 ret:
 	scr->column += len; /* Initial 'q' and digits. */
-	return lexany(scr);
+	LEXRET(scr, lexany);
 }
 
 /**
- * Lexes a given terminal symbol. Also calls lexany as soon as it reaches the
- * end of the given terminal symbol or a character which is not part of the
- * given terminal symbol.
+ * Attempts to lex the terminal symbols `start:` and `accept:`. It calls
+ * ::lexany as soon as it reaches the end of the given terminal symbol
+ * or if a character is encountered which is not part of the any known
+ * terminal symbol.
  *
  * @param scr Pointer to the associated scanner.
- * @param ter Expected terminal symbol.
- * @param tkt Token type to use if the expected terminal symbol was found.
- * @returns A null pointer.
  */
-static void*
-lexterm(scanner *scr, char *ter, toktype tkt)
+static void
+lexterm(scanner *scr)
 {
+	char *ter;
+	toktype tkt;
 	size_t pos, len;
+
+	switch (scr->input[scr->start]) {
+	case 's':
+		tkt = TOK_START;
+		ter = "start:";
+		break;
+	case 'a':
+		tkt = TOK_ACCEPT;
+		ter = "accept:";
+		break;
+	default:
+		emit(scr, TOK_ERROR, ERR_UNKOWN);
+		LEXRET(scr, lexany);
+	}
 
 	len = strlen(ter);
 	if (!xstrncmp(ter, &scr->input[scr->start], len, &pos)) {
@@ -323,7 +324,27 @@ lexterm(scanner *scr, char *ter, toktype tkt)
 	scr->start = scr->pos;
 
 	scr->column += len;
-	return lexany(scr);
+	LEXRET(scr, lexany);
+}
+
+/**
+ * Function invoked by a seperate LWP for parsing the input string. This
+ * function simply calls the current ::statefn until the called
+ * ::statefn function sets the current state to `NULL`.
+ *
+ * @param pscr Void pointer to the scanner used for lexing.
+ * @returns A null pointer.
+ */
+static void*
+tokloop(void *pscr)
+{
+	scanner *scr;
+
+	scr = (scanner*)pscr;
+	while (scr->state != NULL)
+		(*scr->state)(scr); /* fn must set scr->state. */
+
+	return NULL;
 }
 
 /**
@@ -340,12 +361,13 @@ scanstr(char *input)
 
 	scr = emalloc(sizeof(scanner));
 	scr->tqueue = newqueue();
+	scr->state = lexany;
 	scr->pos = scr->start = scr->column = 0;
 	scr->inlen = strlen(input);
 	scr->input = input;
 	scr->line = 1;
 
-	if (pthread_create(&scr->thread, NULL, lexany, (void*)scr))
+	if (pthread_create(&scr->thread, NULL, tokloop, (void*)scr))
 		die("pthread_create failed");
 
 	return scr;

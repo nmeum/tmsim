@@ -26,6 +26,17 @@
 #define TOKAUTO(SCANNER) \
 	((unsigned char)SCANNER->input[scr->start])
 
+/**
+ * Macro which must be used to return from a ::scanfn function. This
+ * macro sets the state field of given scanner and returns afterwards.
+ *
+ * @param SCANNER Scanner for which state field should be modified.
+ * @param FUNCTION Function pointer which should be used as the next
+ * 	state.
+ */
+#define LEXRET(SCANNER, FUNCTION) \
+	do { SCANNER->state = FUNCTION; return; } while (0)
+
 enum {
 	/**
 	 * Passed to emit (as value) if the token doesn't have a
@@ -45,7 +56,19 @@ enum {
  */
 typedef struct _scanner scanner;
 
+/**
+ * Function pointer representing the current state of a ::scanner.
+ */
+typedef void (*scanfn)(scanner *scr);
+
 struct _scanner {
+	/**
+	 * Current state of the scanner. This field points to the
+	 * function which should be invoked next for parsing the
+	 * upcoming characters.
+	 */
+	scanfn state;
+
 	/**
 	 * Thread used to perform lexical scanning of the input string.
 	 */
