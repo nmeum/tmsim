@@ -6,7 +6,7 @@ HEADERS = $(OBJECTS:.o=.h)
 
 CFLAGS ?= -O3 -g
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" \
-	-Wpedantic -Wall -Wextra -Werror
+	-Wpedantic -Wall -Wextra -Wconversion -Werror
 
 CC      ?= gcc
 LDFLAGS += -pthread
