@@ -1,0 +1,6 @@
+start: q0;
+accept: q0;
+
+q0 {
+	a > ; => q0;
+}

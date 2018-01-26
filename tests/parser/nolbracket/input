@@ -1,0 +1,6 @@
+start: q100;
+accept: q99;
+
+q99 >
+	a > a => q99;
+}

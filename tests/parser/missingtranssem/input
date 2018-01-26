@@ -1,0 +1,6 @@
+start: q0;
+accept: q23;
+
+q1 {
+	q < g => q23
+}

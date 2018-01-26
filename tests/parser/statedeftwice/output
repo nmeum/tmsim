@@ -1,0 +1,3 @@
+input:5:5: This state was already defined previously. You can't define states twice please move all transitions from this state definition to the previous definition.
+ q2 {}
+     ^

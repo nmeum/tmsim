@@ -1,0 +1,3 @@
+input:6:1: Missing semicolon, maybe the previous transition is missing a semicolon or a metadata information was not properly terminated with a semicolon.
+ }
+ ^

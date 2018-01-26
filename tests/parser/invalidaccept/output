@@ -1,0 +1,3 @@
+input:2:12: Lexer encountered an unknown character.
+ accept: q1 foo q2;
+            ^

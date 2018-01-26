@@ -1,0 +1,3 @@
+input:5:11: Your transition is missing a state to transit to when performing this transition.
+ 	q > q => qö;
+ 	         ^

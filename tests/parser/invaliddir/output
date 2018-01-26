@@ -1,0 +1,3 @@
+input:5:4: Expected direction to move head to, this symbol is not a valid head direction symbol.
+ 	a ; a => q42;
+ 	  ^

@@ -1,0 +1,4 @@
+start: q1;
+accept: q1;
+
+q42 {}

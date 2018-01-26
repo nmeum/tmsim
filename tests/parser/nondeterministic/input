@@ -1,0 +1,7 @@
+start: q0;
+accept: q0;
+
+q0 {
+	a > a => q1;
+	a > b => q2;
+}

@@ -1,0 +1,3 @@
+input:6:1: Your transition definition is missing a symbol which triggers this transition. This symbol can only be an alphanumeric character or the special blank character.
+ <
+ ^

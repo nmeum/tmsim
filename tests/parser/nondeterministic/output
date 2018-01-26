@@ -1,0 +1,3 @@
+input:6:11: Only deterministic turing machines are supported. Meaning you can't have more than one transition for the same input symbol.
+ 	a > b => q2;
+ 	         ^

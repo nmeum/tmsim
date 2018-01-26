@@ -1,0 +1,6 @@
+start: q5;
+accept: q5;
+
+q42 {
+	b < c , q42;
+}

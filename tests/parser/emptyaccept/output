@@ -1,0 +1,3 @@
+input:2:8: Your accepting state list contains a token which is not a state name or is empty.
+ accept:;
+        ^

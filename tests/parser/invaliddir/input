@@ -1,0 +1,6 @@
+start: q5;
+accept: q3;
+
+q42 {
+	a ; a => q42;
+}

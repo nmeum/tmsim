@@ -1,0 +1,3 @@
+input:1:10: Missing semicolon, maybe the previous transition is missing a semicolon or a metadata information was not properly terminated with a semicolon.
+ start: q2e;
+          ^

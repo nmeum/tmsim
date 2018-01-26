@@ -1,0 +1,3 @@
+input:1:9: A terminal string was expected but the lexer encountered a character which is not part of the expected string. Perhaps you misspelled 'start:' or 'accept:'.
+ start: amieitrer
+         ^
