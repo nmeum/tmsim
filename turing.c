@@ -214,7 +214,8 @@ newtm(void)
 
 	tm = emalloc(sizeof(dtm));
 	tm->states = newtmmap(STATEMAPSIZ);
-	tm->start = tm->acceptsiz = 0;
+	tm->start = 0;
+	tm->acceptsiz = 0;
 	tm->tape = newtapeentry(BLANKCHAR, NULL, NULL);
 	tm->accept = emalloc(ACCEPTSTEP * sizeof(int));
 	tm->acceptsiz = 0;

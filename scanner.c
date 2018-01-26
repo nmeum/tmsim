@@ -276,7 +276,7 @@ lexstate(scanner *scr)
 		emit(scr, TOK_STATE, (unsigned char)value);
 
 ret:
-	scr->column += len; /* Initial 'q' and digits. */
+	scr->column += (unsigned int)len; /* Initial 'q' and digits. */
 	LEXRET(scr, lexany);
 }
 
@@ -323,7 +323,7 @@ lexterm(scanner *scr)
 	scr->pos += --len;
 	scr->start = scr->pos;
 
-	scr->column += len;
+	scr->column += (unsigned int)len;
 	LEXRET(scr, lexany);
 }
 
