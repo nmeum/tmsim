@@ -8,6 +8,10 @@ CFLAGS ?= -O3 -g
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" \
 	-Wpedantic -Wall -Wextra -Wconversion -Werror
 
+ifeq "$(findstring clang,$(shell $(CC) --version))" "clang"
+	CFLAGS += -Wdocumentation
+endif
+
 CC      ?= gcc
 LDFLAGS += -pthread
 
