@@ -1,8 +1,9 @@
 VERSION = 0.5
 PROGS   = tmsim tmsim-export
 
-OBJECTS = scanner.o parser.o turing.o token.o queue.o util.o
-HEADERS = $(OBJECTS:.o=.h)
+SOURCES = scanner.c parser.c turing.c token.c queue.c util.c
+OBJECTS = $(SOURCES:.c=.o)
+HEADERS = $(SOURCES:.c=.h)
 
 CFLAGS ?= -O3 -g
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" \
@@ -24,7 +25,10 @@ tmsim: $(OBJECTS) tmsim.o
 tmsim-export: $(OBJECTS) export.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+format:
+	clang-format -style=file -i $(SOURCES) $(HEADERS)
+
 clean:
 	$(RM) $(PROGS) $(OBJECTS) export.o tmsim.o
 
-.PHONY: all clean
+.PHONY: all clean format
