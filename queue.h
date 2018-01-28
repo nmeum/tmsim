@@ -17,17 +17,7 @@
  */
 
 enum {
-	MAXNODES = 2048, /**< Max amount of nodes in the queue. */
-};
-
-/**
- * Node data type containing metadata for storing a value in the queue.
- */
-typedef struct _node node;
-
-struct _node {
-	token *value;	/**< Token value of this node. */
-	node *next;	/**< Node inserted before this one. */
+	NUMTOKENS = 5, /**< Amount of tokens kept in queue. */
 };
 
 /**
@@ -38,16 +28,10 @@ struct _node {
 typedef struct _queue queue;
 
 struct _queue {
-	/**
-	 * Current head of the queue, usually an anchor element.
-	 * The next field of this node is the element returned on dequeue.
-	 */
-	node *head;
+	token *tokens[NUMTOKENS]; /**< Array used to store tokens. */
 
-	/**
-	 * Current tail of the queue used for inserting new elements.
-	 */
-	node *tail;
+	size_t head; /**< Index of the queue head. */
+	size_t tail; /**< Index of the queue tail. */
 
 	sem_t fullsem;  /**< Represents number of elements in the queue. */
 	sem_t emptysem; /**< Represents number of empty places in the queue. */
