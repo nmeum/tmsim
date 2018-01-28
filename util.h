@@ -35,8 +35,8 @@ char *estrndup(char*, size_t);
 void *emalloc(size_t);
 void *erealloc(void*, size_t);
 
-void pthread_spin_elock(pthread_spinlock_t*);
-void pthread_spin_eunlock(pthread_spinlock_t*);
+void pthread_mutex_elock(pthread_mutex_t*);
+void pthread_mutex_eunlock(pthread_mutex_t*);
 
 void sem_ewait(sem_t*);
 void sem_epost(sem_t*);

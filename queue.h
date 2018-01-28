@@ -36,8 +36,8 @@ struct _queue {
 	sem_t fullsem;  /**< Represents number of elements in the queue. */
 	sem_t emptysem; /**< Represents number of empty places in the queue. */
 
-	pthread_spinlock_t hlock; /**< Prevents concurrent access of head. */
-	pthread_spinlock_t tlock; /**< Prevents concurrent access of tail. */
+	pthread_mutex_t hmtx; /**< Prevents concurrent access of head. */
+	pthread_mutex_t tmtx; /**< Prevents concurrent access of tail. */
 };
 
 queue *newqueue(void);

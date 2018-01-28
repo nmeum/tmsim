@@ -39,9 +39,9 @@ newqueue(void)
 	qu = emalloc(sizeof(queue));
 	qu->head = qu->tail = 0;
 
-	if (pthread_spin_init(&qu->hlock, PTHREAD_PROCESS_PRIVATE)
-			|| pthread_spin_init(&qu->tlock, PTHREAD_PROCESS_PRIVATE))
-		die("pthread_spin_init failed");
+	if (pthread_mutex_init(&qu->hmtx, NULL)
+			|| pthread_mutex_init(&qu->tmtx, NULL))
+		die("pthread_mutex_init failed");
 
 	if (sem_init(&qu->fullsem, 0, 0)
 			|| sem_init(&qu->emptysem, 0, NUMTOKENS))
@@ -61,9 +61,9 @@ void
 enqueue(queue *qu, token *value)
 {
 	sem_ewait(&qu->emptysem);
-	pthread_spin_elock(&qu->tlock);
+	pthread_mutex_elock(&qu->tmtx);
 	qu->tokens[qu->tail++ % NUMTOKENS] = value;
-	pthread_spin_eunlock(&qu->tlock);
+	pthread_mutex_eunlock(&qu->tmtx);
 	sem_epost(&qu->fullsem);
 }
 
@@ -79,9 +79,9 @@ dequeue(queue *qu)
 	token *ret;
 
 	sem_ewait(&qu->fullsem);
-	pthread_spin_elock(&qu->hlock);
+	pthread_mutex_elock(&qu->hmtx);
 	ret = qu->tokens[qu->head++ % NUMTOKENS];
-	pthread_spin_eunlock(&qu->hlock);
+	pthread_mutex_eunlock(&qu->hmtx);
 	sem_epost(&qu->emptysem);
 
 	return ret;
@@ -104,9 +104,9 @@ freequeue(queue *qu)
 			sem_destroy(&qu->emptysem))
 		die("sem_destroy failed");
 
-	if (pthread_spin_destroy(&qu->hlock)
-			|| pthread_spin_destroy(&qu->tlock))
-		die("pthread_spin_destroy failed");
+	if (pthread_mutex_destroy(&qu->hmtx)
+			|| pthread_mutex_destroy(&qu->tmtx))
+		die("pthread_mutex_destroy failed");
 
 	free(qu);
 }

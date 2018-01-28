@@ -246,29 +246,29 @@ erealloc(void *ptr, size_t size)
 }
 
 /**
- * Calls pthread_spin_lock(3) but terminates the program with EXIT_FAILURE if
- * pthread_spin_lock returned an error.
+ * Calls pthread_mutex_lock(3) but terminates the program with
+ * EXIT_FAILURE if pthread_mutex_lock returned an error.
  *
  * @param lock Spin lock which should be locked.
  */
 void
-pthread_spin_elock(pthread_spinlock_t *lock)
+pthread_mutex_elock(pthread_mutex_t *lock)
 {
-	if (pthread_spin_lock(lock))
-		die("pthread_spin_lock failed");
+	if (pthread_mutex_lock(lock))
+		die("pthread_mutex_lock failed");
 }
 
 /**
- * Calls pthread_spin_unlock(3) but terminates the program with EXIT_FAILURE if
- * pthread_spin_unlock returned an error.
+ * Calls pthread_mutex_unlock(3) but terminates the program with
+ * EXIT_FAILURE if pthread_mutex_unlock returned an error.
  *
  * @param lock Spin lock which should be unlocked.
  */
 void
-pthread_spin_eunlock(pthread_spinlock_t *lock)
+pthread_mutex_eunlock(pthread_mutex_t *lock)
 {
-	if (pthread_spin_unlock(lock))
-		die("pthread_spin_unlock failed");
+	if (pthread_mutex_unlock(lock))
+		die("pthread_mutex_unlock failed");
 }
 
 /**
