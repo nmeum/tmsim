@@ -174,6 +174,7 @@ lexany(scanner *scr)
 	case 'q':
 		if (isdigit(peekch(scr)))
 			LEXRET(scr, lexstate);
+		break;
 	case '=':
 		if (nextch(scr) == '>')
 			emit(scr, TOK_NEXT, TOKNOP);
