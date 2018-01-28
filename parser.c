@@ -130,13 +130,13 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	if (tok->type == TOK_ERROR) {
 		switch (tok->value) {
 		case ERR_OVERFLOW:
-			msg = "Numeric state name excceds UCHAR_MAX.";
+			msg = "Numeric state name exceeds UCHAR_MAX.";
 			goto ret;
 		case ERR_UNDERFLOW:
 			msg = "Numeric state names can't be negative.";
 			goto ret;
 		case ERR_UNKOWN:
-			msg = "Lexer encountered an unkown character.";
+			msg = "Lexer encountered an unknown character.";
 			goto ret;
 		case ERR_UNEXPECTED:
 			msg = "A terminal string was expected but the "
