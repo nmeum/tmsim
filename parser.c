@@ -412,7 +412,7 @@ parsestate(parser *par, tmstate *dest)
 
 	par->tok = next(par);
 	if (par->tok->type != TOK_RBRACKET)
-		return PAR_RBRACKET;
+		return PAR_RBRACKET; /* Never reached. */
 
 	return PAR_OK;
 }
