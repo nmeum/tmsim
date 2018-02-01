@@ -151,7 +151,7 @@ main(int argc, char **argv)
 			break;
 		case 'v':
 			fprintf(stderr, "tmsim-"VERSION"\n");
-			return 1;
+			return EXIT_FAILURE;
 		case 'h':
 		default:
 			usage(argv[0]);
@@ -169,12 +169,12 @@ main(int argc, char **argv)
 	tm = newtm();
 	if ((ret = parsetm(par, tm)) != PAR_OK) {
 		strparerr(par, ret, fp, stdout);
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	free(fc);
 	freeparser(par);
 
 	export(tm, ofd);
-	return 0;
+	return EXIT_SUCCESS;
 }
