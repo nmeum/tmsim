@@ -16,6 +16,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TMSIM_SCANNER_H
+#define _TMSIM_SCANNER_H
+
+#include <pthread.h>
+
+#include <sys/types.h>
+
+#include "token.h"
+#include "queue.h"
+
 /**
  * Can be used in conjunction with emit if the character in the input
  * string at the start position of this token should be used as the
@@ -92,3 +102,5 @@ struct _scanner {
 scanner *scanstr(char*);
 token *nexttoken(scanner*);
 void freescanner(scanner*);
+
+#endif

@@ -19,7 +19,6 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <stdio.h>
 #include <semaphore.h>
 
 #include "util.h"

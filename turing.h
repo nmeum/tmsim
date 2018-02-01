@@ -16,6 +16,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TMSIM_TURING_H
+#define _TMSIM_TURING_H
+
+#include <sys/types.h>
+
 enum {
 	/**
 	 * Amount of buckets used for the state map.
@@ -167,3 +172,5 @@ void eachtrans(tmstate*, void(*fn)(tmtrans*, tmstate*, void*), void*);
 int runtm(dtm*);
 char dirstr(direction);
 int verifyinput(char*, size_t*);
+
+#endif

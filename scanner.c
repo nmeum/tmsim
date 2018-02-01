@@ -23,8 +23,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
-#include <semaphore.h>
-#include <stddef.h>
+
+#include <sys/types.h>
 
 #include "util.h"
 #include "token.h"

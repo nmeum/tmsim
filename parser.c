@@ -16,18 +16,17 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include <semaphore.h>
+
+#include <sys/types.h>
 
 #include "util.h"
 #include "token.h"
-#include "queue.h"
 #include "scanner.h"
-#include "turing.h"
 #include "parser.h"
+#include "turing.h"
 
 /**
  * Macro which should be used if the next expected token is a semicolon token.

@@ -16,6 +16,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TMSIM_QUEUE_H
+#define _TMSIM_QUEUE_H
+
+#include <pthread.h>
+#include <semaphore.h>
+
+#include <sys/types.h>
+
+#include "token.h"
+
 enum {
 	/**
 	 * Maximum amount of tokens kept in the queue.
@@ -47,3 +57,5 @@ queue *newqueue(void);
 void freequeue(queue*);
 void enqueue(queue*, token*);
 token *dequeue(queue*);
+
+#endif

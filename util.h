@@ -16,6 +16,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TMSIM_UTIL_H
+#define _TMSIM_UTIL_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#include <sys/types.h>
+
 /**
  * Macro which calls perror(3) and terminates the program with EXIT_FAILURE.
  *
@@ -40,3 +50,5 @@ void pthread_mutex_eunlock(pthread_mutex_t*);
 
 void sem_ewait(sem_t*);
 void sem_epost(sem_t*);
+
+#endif

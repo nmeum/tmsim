@@ -16,6 +16,15 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TMSIM_PARSER_H
+#define _TMSIM_PARSER_H
+
+#include <stdio.h>
+
+#include "token.h"
+#include "turing.h"
+#include "scanner.h"
+
 /**
  * A parser for the tmsim input format.
  */
@@ -78,3 +87,5 @@ parser *newparser(char*);
 parerr parsetm(parser*, dtm*);
 void freeparser(parser*);
 int strparerr(parser*, parerr, char*, FILE*);
+
+#endif

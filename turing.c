@@ -18,11 +18,11 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
-#include <semaphore.h>
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
+
+#include <sys/types.h>
 
 #include "util.h"
 #include "turing.h"

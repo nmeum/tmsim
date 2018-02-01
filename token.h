@@ -16,6 +16,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TMSIM_TOKEN_H
+#define _TMSIM_TOKEN_H
+
 /**
  * Error codes used as token value when the value of the token type field is
  * equal to TOK_ERROR.
@@ -64,3 +67,5 @@ struct _token {
 };
 
 void freetoken(token*);
+
+#endif

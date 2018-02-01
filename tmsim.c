@@ -16,18 +16,15 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <semaphore.h>
+#include <stdlib.h>
 #include <unistd.h>
 
-#include "util.h"
-#include "token.h"
-#include "queue.h"
-#include "scanner.h"
+#include <sys/types.h>
+
 #include "turing.h"
 #include "parser.h"
+#include "util.h"
 
 /**
  * Writes the usage string for this program to stderr and terminates
