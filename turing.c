@@ -219,7 +219,7 @@ newtm(void)
 	tm->start = 0;
 	tm->acceptsiz = 0;
 	tm->tape = newtapeentry(BLANKCHAR, NULL, NULL);
-	tm->accept = emalloc(ACCEPTSTEP * sizeof(int));
+	tm->accept = emalloc(ACCEPTSTEP * sizeof(tmname));
 	tm->acceptsiz = 0;
 	return tm;
 }
@@ -233,9 +233,12 @@ newtm(void)
 void
 addaccept(dtm *tm, tmname state)
 {
-	if (tm->acceptsiz && tm->acceptsiz % ACCEPTSTEP == 0)
-		tm->accept = erealloc(tm->accept,
-			(tm->acceptsiz + ACCEPTSTEP) * sizeof(int));
+	size_t newsiz;
+
+	if (tm->acceptsiz && tm->acceptsiz % ACCEPTSTEP == 0) {
+		newsiz = (tm->acceptsiz + ACCEPTSTEP) * sizeof(tmname);
+		tm->accept = erealloc(tm->accept, newsiz);
+	}
 
 	tm->accept[tm->acceptsiz++] = state;
 }
@@ -310,7 +313,7 @@ addtrans(tmstate *state, tmtrans *trans)
  *
  * @param state State from which a transition should be extracted.
  * @param rsym Symbol which triggers the tranisition.
- * @param dest Pointer to a transition which should be used for storing the result.
+ * @param dest Double pointer used for storing the result.
  * @returns -1 if a transition with the given symbol doesn't exist, 0 otherwise.
  */
 int
@@ -474,11 +477,9 @@ void
 eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
 {
 	size_t i;
-	tmmap *map;
 	mapentry *elem;
 
-	map = tm->states;
-	MAP_FOREACH(map, elem, i)
+	MAP_FOREACH(tm->states, elem, i)
 		(*fn)(elem->data.state, arg);
 }
 
@@ -494,11 +495,9 @@ void
 eachtrans(tmstate *state, void (*fn)(tmtrans*, tmstate*, void*), void *arg)
 {
 	size_t i;
-	tmmap *map;
 	mapentry *elem;
 
-	map = state->trans;
-	MAP_FOREACH(map, elem, i)
+	MAP_FOREACH(state->trans, elem, i)
 		(*fn)(elem->data.trans, state, arg);
 }
 

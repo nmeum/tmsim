@@ -17,7 +17,10 @@
  */
 
 enum {
-	NUMTOKENS = 5, /**< Amount of tokens kept in queue. */
+	/**
+	 * Maximum amount of tokens kept in the queue.
+	 */
+	NUMTOKENS = 5,
 };
 
 /**

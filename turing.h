@@ -17,10 +17,25 @@
  */
 
 enum {
-	STATEMAPSIZ = 128,	/**< Amount of buckets in the state map. */
-	TRANSMAPSIZ = 16,	/**< Amount of buckets in the transition map. */
-	ACCEPTSTEP = 8,		/**< Initial amount of accept states (later resized with realloc). */
-	BLANKCHAR = '$',	/**< Character used to represent blanks on the tape. */
+	/**
+	 * Amount of buckets used for the state map.
+	 */
+	STATEMAPSIZ = 128,
+
+	/**
+	 * Amount of buckets used for the transition map.
+	 */
+	TRANSMAPSIZ = 16,
+
+	/**
+	 * Amount of space allocated for accepting states with realloc.
+	 */
+	ACCEPTSTEP = 8,
+
+	/**
+	 * Character used to represent blanks on the tape.
+	 */
+	BLANKCHAR = '$',
 };
 
 /**
@@ -125,12 +140,12 @@ struct _tapeentry {
 typedef struct _dtm dtm;
 
 struct _dtm {
-	tapeentry *tape;	/**< Current tape content of this turing machine. */
-	tmmap *states;		/**< States of this turing machine. */
-	tmname start;		/**< Name of initial state for this turing machine. */
+	tapeentry *tape;	/**< Tape content. */
+	tmmap *states;		/**< Map of all states. */
+	tmname start;		/**< Initial state. */
 
-	size_t acceptsiz;	/**< Amount of accepting state of this turing machine. */
-	tmname *accept;		/**< Name of accepting states of this turing machine. */
+	tmname *accept;		/**< Pointer to array of accepting states. */
+	size_t acceptsiz;	/**< Amount of accepting states. */
 };
 
 dtm *newtm(void);

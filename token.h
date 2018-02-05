@@ -59,8 +59,8 @@ struct _token {
 	toktype type;		/**< Type of this token (see above). */
 	unsigned char value;	/**< Value of this token. */
 
-	unsigned int line;	/**< Line in input file the token is located at. */
-	unsigned int column;	/**< Column in input file the token is located at. */
+	unsigned int line;	/**< Line of token in input file. */
+	unsigned int column;	/**< Column of token in input file. */
 };
 
 void freetoken(token*);

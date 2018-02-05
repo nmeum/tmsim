@@ -79,14 +79,14 @@ struct _scanner {
 	 */
 	queue *tqueue;
 
-	size_t pos;		/**< Current position in the input string. **/
-	size_t start;		/**< Start position of current token in input string. */
+	char *input;		/**< Input string passed to ::scanstr. */
 	size_t inlen;		/**< Length of the input string. */
 
-	char *input;		/**< Input string passed to scanstr. */
+	size_t pos;		/**< Current position in the input string. */
+	size_t start;		/**< Start position of current token in input string. */
 
-	unsigned int line;	/**< Line number the scanner is currently analyzing. */
-	unsigned int column;	/**< Column the scanner is currently analyzing. */
+	unsigned int line;	/**< Line being analyzed currently. */
+	unsigned int column;	/**< Column being analyzed currently. */
 };
 
 scanner *scanstr(char*);

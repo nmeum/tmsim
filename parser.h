@@ -55,13 +55,13 @@ typedef enum {
 	PAR_SEMICOLON,		/**< Parser didn't encounter semicolon. */
 
 	PAR_STATEDEFTWICE,	/**< State was defined twice. */
-	PAR_TRANSDEFTWICE,	/**< Multiple transitions with same input symbol from one state. */
+	PAR_TRANSDEFTWICE,	/**< Non-deterministic turing machine. */
 
 	PAR_STARTKEY,		/**< Parser didn't find 'start:' keyword. */
 	PAR_INITALSTATE,	/**< Parser didn't find an initial state. */
 
 	PAR_ACCEPTKEY,		/**< Parser didn't encounter 'accept:' keyword. */
-	PAR_NONSTATEACCEPT,	/**< Accepting state list contains a non-state token. */
+	PAR_NONSTATEACCEPT,	/**< Invalid token in accepting state list. */
 
 	PAR_STATEDEF,           /**< Expected statename for state definition. */
 	PAR_LBRACKET,		/**< Missing opening left bracket in state definition. */
