@@ -36,9 +36,8 @@
 static void
 usage(char *prog)
 {
-	char *usage = "[-r] [-h|-v] FILE [INPUT]";
-
-	fprintf(stderr, "USAGE: %s %s\n", prog, usage);
+	fprintf(stderr, "USAGE: %s %s\n", prog,
+		"[-r] [-h|-v] FILE [INPUT]");
 	exit(EXIT_FAILURE);
 }
 
@@ -53,7 +52,9 @@ usage(char *prog)
 static void
 inputerr(char *str, size_t pos)
 {
-	char *marker, *msg = "Input can only consist of alphanumeric "
+	char *marker, *msg;
+	
+	msg = "Input can only consist of alphanumeric "
 		"characters.\n\t Besides it can't contain the "
 		"special blank character.";
 

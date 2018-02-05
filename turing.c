@@ -32,10 +32,11 @@
  *
  * @param MAP Pointer to a tmmap to iterate over.
  * @param VARNAME Variable name used for current item.
+ * @param IDXVARNAME Variable used to iterate through buckets.
  */
-#define MAP_FOREACH(MAP, VARNAME) \
-	for (size_t i = 0; i < MAP->size; i++) \
-		for (VARNAME = MAP->entries[i]; \
+#define MAP_FOREACH(MAP, VARNAME, IDXVARNAME) \
+	for (IDXVARNAME = 0; IDXVARNAME < MAP->size; IDXVARNAME++) \
+		for (VARNAME = MAP->entries[IDXVARNAME]; \
 			VARNAME; VARNAME = VARNAME->next) \
 
 /**
@@ -47,13 +48,14 @@
 static tmmap*
 newtmmap(size_t size)
 {
+	size_t i;
 	tmmap *map;
 
 	map = emalloc(sizeof(tmmap));
 	map->size = size;
 	map->entries = emalloc(sizeof(mapentry*) * size);
 
-	for (size_t i = 0; i < size; i++)
+	for (i = 0; i < size; i++)
 		map->entries[i] = NULL;
 
 	return map;
@@ -333,12 +335,12 @@ gettrans(tmstate *state, unsigned char rsym, tmtrans **dest)
 void
 writetape(dtm *tm, char *str)
 {
-	tapeentry *ent, *last;
 	char c;
+	tapeentry *ent, *last;
 
 	last = tm->tape;
-	for (tapeentry *i = tm->tape; i; i = i->next)
-		last = i;
+	for (ent = tm->tape; ent; ent = ent->next)
+		last = ent;
 
 	while ((c = *str++)) {
 		ent = newtapeentry((unsigned char)c, last, NULL);
@@ -385,7 +387,9 @@ printtape(dtm *tm)
 static int
 isaccepting(dtm *tm, tmname name)
 {
-	for (size_t i = 0; i < tm->acceptsiz; i++)
+	size_t i;
+
+	for (i = 0; i < tm->acceptsiz; i++)
 		if (tm->accept[i] == name)
 			return 0;
 
@@ -469,11 +473,12 @@ runtm(dtm *tm)
 void
 eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
 {
+	size_t i;
 	tmmap *map;
 	mapentry *elem;
 
 	map = tm->states;
-	MAP_FOREACH(map, elem)
+	MAP_FOREACH(map, elem, i)
 		(*fn)(elem->data.state, arg);
 }
 
@@ -488,11 +493,12 @@ eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
 void
 eachtrans(tmstate *state, void (*fn)(tmtrans*, tmstate*, void*), void *arg)
 {
+	size_t i;
 	tmmap *map;
 	mapentry *elem;
 
 	map = state->trans;
-	MAP_FOREACH(map, elem)
+	MAP_FOREACH(map, elem, i)
 		(*fn)(elem->data.trans, state, arg);
 }
 

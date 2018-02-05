@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Sören Tempel
+ * Copyright © 2016-2018 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -56,9 +56,7 @@ static char *acceptingshape = "doublecircle";
 static void
 exporttrans(tmtrans *trans, tmstate *state, void *arg)
 {
-	FILE *stream = (FILE*)arg;
-
-	fprintf(stream, "q%d -> q%d [label=\"%c/%c/%c\"];\n",
+	fprintf(arg, "q%d -> q%d [label=\"%c/%c/%c\"];\n",
 		state->name, trans->nextstate,
 		trans->rsym, trans->wsym,
 		dirstr(trans->headdir));
@@ -74,9 +72,7 @@ exporttrans(tmtrans *trans, tmstate *state, void *arg)
 static void
 exportstate(tmstate *state, void *arg)
 {
-	FILE *stream = (FILE*)arg;
-
-	eachtrans(state, exporttrans, stream);
+	eachtrans(state, exporttrans, arg);
 }
 
 /**
@@ -89,7 +85,6 @@ exportstate(tmstate *state, void *arg)
 static void
 export(dtm *tm, FILE *stream)
 {
-
 	fprintf(stream, "digraph G {\nrankdir = \"LR\";\n\n");
 
 	fprintf(stream, "node [shape = %s];\n", initialshape);
@@ -111,10 +106,10 @@ export(dtm *tm, FILE *stream)
 static void
 usage(char *prog)
 {
-	char *usage = "[-s nodeshape] [-i initialshape]\n"
-		"\t[-a acceptingshape] [-o path] [-h|-v] FILE";
+	fprintf(stderr, "USAGE: %s %s\n", prog,
+		"[-s nodeshape] [-i initialshape]\n"
+		"\t[-a acceptingshape] [-o path] [-h|-v] FILE");
 
-	fprintf(stderr, "USAGE: %s %s\n", prog, usage);
 	exit(EXIT_FAILURE);
 }
 
@@ -132,8 +127,9 @@ main(int argc, char **argv)
 	dtm *tm;
 	parser *par;
 	char *fc, *fp;
-	FILE *ofd = stdout;
+	FILE *ofd;
 
+	ofd = stdout;
 	while ((opt = getopt(argc, argv, "s:i:a:o:hv")) != -1) {
 		switch (opt) {
 		case 's':
