@@ -18,6 +18,10 @@ If you installed all dependencies build tmsim the following way:
 
 	$ make
 
+To test if tmsim works as expected you can run the test suite using:
+
+	$ make test
+
 Format
 ======
 
