@@ -1,4 +1,4 @@
-VERSION = 0.5
+VERSION = 0.9.9
 PROGS   = tmsim tmsim-export
 
 SOURCES = scanner.c parser.c turing.c token.c queue.c util.c
