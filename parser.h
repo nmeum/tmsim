@@ -21,9 +21,9 @@
 
 #include <stdio.h>
 
+#include "scanner.h"
 #include "token.h"
 #include "turing.h"
-#include "scanner.h"
 
 /**
  * A parser for the tmsim input format.
@@ -45,7 +45,8 @@ struct _parser {
 
 	/**
 	 * Current token, stored here instead in order to extract line and
-	 * column information form the token when the user requests an error string.
+	 * column information form the token when the user requests an error
+	 * string.
 	 */
 	token *tok;
 
@@ -60,32 +61,32 @@ struct _parser {
  * encountered. Makes it easier to debug syntax errors in input files.
  */
 typedef enum {
-	PAR_OK,			/**< Input was parsed successfully. */
-	PAR_SEMICOLON,		/**< Parser didn't encounter semicolon. */
+	PAR_OK,        /**< Input was parsed successfully. */
+	PAR_SEMICOLON, /**< Parser didn't encounter semicolon. */
 
-	PAR_STATEDEFTWICE,	/**< State was defined twice. */
-	PAR_TRANSDEFTWICE,	/**< Non-deterministic turing machine. */
+	PAR_STATEDEFTWICE, /**< State was defined twice. */
+	PAR_TRANSDEFTWICE, /**< Non-deterministic turing machine. */
 
-	PAR_STARTKEY,		/**< Parser didn't find 'start:' keyword. */
-	PAR_INITALSTATE,	/**< Parser didn't find an initial state. */
+	PAR_STARTKEY,    /**< Parser didn't find 'start:' keyword. */
+	PAR_INITALSTATE, /**< Parser didn't find an initial state. */
 
-	PAR_ACCEPTKEY,		/**< Parser didn't encounter 'accept:' keyword. */
-	PAR_NONSTATEACCEPT,	/**< Invalid token in accepting state list. */
+	PAR_ACCEPTKEY,      /**< Parser didn't encounter 'accept:' keyword. */
+	PAR_NONSTATEACCEPT, /**< Invalid token in accepting state list. */
 
-	PAR_STATEDEF,           /**< Expected statename for state definition. */
-	PAR_LBRACKET,		/**< Missing opening left bracket in state definition. */
-	PAR_RBRACKET,		/**< Missing closing right bracket in state definition. */
+	PAR_STATEDEF, /**< Expected statename for state definition. */
+	PAR_LBRACKET, /**< Missing opening left bracket in state definition. */
+	PAR_RBRACKET, /**< Missing closing right bracket in state definition. */
 
-	PAR_RSYMBOL,		/**< Expected symbol to read for transition. */
-	PAR_DIRECTION,		/**< Expected direction symbol for head movement. */
-	PAR_WSYMBOL,		/**< Expected symbol to write after transition. */
-	PAR_NEXTSTATESYM,	/**< Expected '=>' symbol. */
-	PAR_NEXTSTATE,		/**< Expected name of new state. */
+	PAR_RSYMBOL,      /**< Expected symbol to read for transition. */
+	PAR_DIRECTION,    /**< Expected direction symbol for head movement. */
+	PAR_WSYMBOL,      /**< Expected symbol to write after transition. */
+	PAR_NEXTSTATESYM, /**< Expected '=>' symbol. */
+	PAR_NEXTSTATE,    /**< Expected name of new state. */
 } parerr;
 
-parser *newparser(char*);
-parerr parsetm(parser*, dtm*);
-void freeparser(parser*);
-int strparerr(parser*, parerr, char*, FILE*);
+parser *newparser(char *);
+parerr parsetm(parser *, dtm *);
+void freeparser(parser *);
+int strparerr(parser *, parerr, char *, FILE *);
 
 #endif

@@ -19,10 +19,10 @@
 #ifndef _TMSIM_UTIL_H
 #define _TMSIM_UTIL_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <sys/types.h>
 
@@ -32,23 +32,26 @@
  * @param msg String passed as a first argument to perror(3).
  */
 #define die(msg) \
-	do { perror(msg); exit(EXIT_FAILURE); } while (0)
+	do { \
+		perror(msg); \
+		exit(EXIT_FAILURE); \
+	} while (0)
 
-int xstrncmp(char*, char*, size_t, size_t*);
-char *readfile(char*);
-char *mark(size_t, char*);
+int xstrncmp(char *, char *, size_t, size_t *);
+char *readfile(char *);
+char *mark(size_t, char *);
 
-char* linenum(char*, unsigned int);
-size_t endofline(char*);
+char *linenum(char *, unsigned int);
+size_t endofline(char *);
 
-char *estrndup(char*, size_t);
+char *estrndup(char *, size_t);
 void *emalloc(size_t);
-void *erealloc(void*, size_t);
+void *erealloc(void *, size_t);
 
-void pthread_mutex_elock(pthread_mutex_t*);
-void pthread_mutex_eunlock(pthread_mutex_t*);
+void pthread_mutex_elock(pthread_mutex_t *);
+void pthread_mutex_eunlock(pthread_mutex_t *);
 
-void sem_ewait(sem_t*);
-void sem_epost(sem_t*);
+void sem_ewait(sem_t *);
+void sem_epost(sem_t *);
 
 #endif

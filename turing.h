@@ -52,9 +52,9 @@ typedef unsigned int tmname;
  * Enum describing direction head should be moved in.
  */
 typedef enum {
-	RIGHT,	/**< Move head right. */
-	LEFT,	/**< Move head left. */
-	STAY,	/**< Don't move head at all. */
+	RIGHT, /**< Move head right. */
+	LEFT,  /**< Move head left. */
+	STAY,  /**< Don't move head at all. */
 } direction;
 
 typedef struct _tmstate tmstate; /**< State of a turing machine. */
@@ -71,7 +71,7 @@ typedef unsigned int mapkey;
 typedef struct _mapentry mapentry;
 
 struct _mapentry {
-	mapkey key;	/**< Key of this entry. */
+	mapkey key; /**< Key of this entry. */
 
 	/**
 	 * If there was a hash collision bucket hashing is used which means
@@ -93,13 +93,13 @@ struct _mapentry {
 typedef struct _tmmap tmmap;
 
 struct _tmmap {
-	size_t size;		/**< Amount of buckets which should be used. */
-	mapentry **entries;	/**< Pointer pointing to entry pointers. */
+	size_t size;        /**< Amount of buckets which should be used. */
+	mapentry **entries; /**< Pointer pointing to entry pointers. */
 };
 
 struct _tmstate {
-	tmname name;	/**< Name of this tmstate. */
-	tmmap *trans;	/**< Transitions for this state. */
+	tmname name;  /**< Name of this tmstate. */
+	tmmap *trans; /**< Transitions for this state. */
 };
 
 struct _tmtrans {
@@ -134,9 +134,9 @@ struct _tmtrans {
 typedef struct _tapeentry tapeentry;
 
 struct _tapeentry {
-	unsigned char value;	/**< Symbol for this tape entry. */
-	tapeentry *next;	/**< Entry on the right-hand side of this one. */
-	tapeentry *prev;	/**< Entry on the left-hand side of this one. */
+	unsigned char value; /**< Symbol for this tape entry. */
+	tapeentry *next;     /**< Entry on the right-hand side of this one. */
+	tapeentry *prev;     /**< Entry on the left-hand side of this one. */
 };
 
 /**
@@ -145,32 +145,32 @@ struct _tapeentry {
 typedef struct _dtm dtm;
 
 struct _dtm {
-	tapeentry *tape;	/**< Tape content. */
-	tmmap *states;		/**< Map of all states. */
-	tmname start;		/**< Initial state. */
+	tapeentry *tape; /**< Tape content. */
+	tmmap *states;   /**< Map of all states. */
+	tmname start;    /**< Initial state. */
 
-	tmname *accept;		/**< Pointer to array of accepting states. */
-	size_t acceptsiz;	/**< Amount of accepting states. */
+	tmname *accept;   /**< Pointer to array of accepting states. */
+	size_t acceptsiz; /**< Amount of accepting states. */
 };
 
 dtm *newtm(void);
 tmstate *newtmstate(void);
-void addaccept(dtm*, tmname);
+void addaccept(dtm *, tmname);
 
-int addtrans(tmstate*, tmtrans*);
-int gettrans(tmstate*, unsigned char, tmtrans**);
+int addtrans(tmstate *, tmtrans *);
+int gettrans(tmstate *, unsigned char, tmtrans **);
 
-int addstate(dtm*, tmstate*);
-int getstate(dtm*, tmname, tmstate**);
+int addstate(dtm *, tmstate *);
+int getstate(dtm *, tmname, tmstate **);
 
-void writetape(dtm*, char*);
-void printtape(dtm*);
+void writetape(dtm *, char *);
+void printtape(dtm *);
 
-void eachstate(dtm*, void (*fn)(tmstate*, void*), void*);
-void eachtrans(tmstate*, void(*fn)(tmtrans*, tmstate*, void*), void*);
+void eachstate(dtm *, void (*fn)(tmstate *, void *), void *);
+void eachtrans(tmstate *, void (*fn)(tmtrans *, tmstate *, void *), void *);
 
-int runtm(dtm*);
+int runtm(dtm *);
 char dirstr(direction);
-int verifyinput(char*, size_t*);
+int verifyinput(char *, size_t *);
 
 #endif

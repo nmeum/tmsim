@@ -16,21 +16,21 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
-#include <stdlib.h>
 #include <assert.h>
+#include <pthread.h>
 #include <semaphore.h>
+#include <stdlib.h>
 
-#include "util.h"
-#include "token.h"
 #include "queue.h"
+#include "token.h"
+#include "util.h"
 
 /**
  * Allocates memory for a new queue and initializes it.
  *
  * @returns A pointer to the newly created queue.
  */
-queue*
+queue *
 newqueue(void)
 {
 	queue *qu;
@@ -38,12 +38,12 @@ newqueue(void)
 	qu = emalloc(sizeof(queue));
 	qu->head = qu->tail = 0;
 
-	if (pthread_mutex_init(&qu->hmtx, NULL)
-			|| pthread_mutex_init(&qu->tmtx, NULL))
+	if (pthread_mutex_init(&qu->hmtx, NULL) ||
+	    pthread_mutex_init(&qu->tmtx, NULL))
 		die("pthread_mutex_init failed");
 
-	if (sem_init(&qu->fullsem, 0, 0)
-			|| sem_init(&qu->emptysem, 0, NUMTOKENS))
+	if (sem_init(&qu->fullsem, 0, 0) ||
+	    sem_init(&qu->emptysem, 0, NUMTOKENS))
 		die("sem_init failed");
 
 	return qu;
@@ -72,7 +72,7 @@ enqueue(queue *qu, token *value)
  *
  * @returns Pointer to the least recently added token.
  */
-token*
+token *
 dequeue(queue *qu)
 {
 	token *ret;
@@ -99,12 +99,11 @@ freequeue(queue *qu)
 {
 	assert(qu);
 
-	if (sem_destroy(&qu->fullsem) ||
-			sem_destroy(&qu->emptysem))
+	if (sem_destroy(&qu->fullsem) || sem_destroy(&qu->emptysem))
 		die("sem_destroy failed");
 
-	if (pthread_mutex_destroy(&qu->hmtx)
-			|| pthread_mutex_destroy(&qu->tmtx))
+	if (pthread_mutex_destroy(&qu->hmtx) ||
+	    pthread_mutex_destroy(&qu->tmtx))
 		die("pthread_mutex_destroy failed");
 
 	free(qu);

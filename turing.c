@@ -16,16 +16,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-#include <string.h>
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <sys/types.h>
 
-#include "util.h"
 #include "turing.h"
+#include "util.h"
 
 /**
  * Macro used to iterate over all entries of a tmmap.
@@ -36,8 +36,8 @@
  */
 #define MAP_FOREACH(MAP, VARNAME, IDXVARNAME) \
 	for (IDXVARNAME = 0; IDXVARNAME < MAP->size; IDXVARNAME++) \
-		for (VARNAME = MAP->entries[IDXVARNAME]; \
-			VARNAME; VARNAME = VARNAME->next) \
+		for (VARNAME = MAP->entries[IDXVARNAME]; VARNAME; \
+		     VARNAME = VARNAME->next)
 
 /**
  * Allocates memory for a tmmap and initializes it.
@@ -45,7 +45,7 @@
  * @param size Amount of buckets that should be used.
  * @returns Pointer to the initialized tmmap.
  */
-static tmmap*
+static tmmap *
 newtmmap(size_t size)
 {
 	size_t i;
@@ -53,7 +53,7 @@ newtmmap(size_t size)
 
 	map = emalloc(sizeof(tmmap));
 	map->size = size;
-	map->entries = emalloc(sizeof(mapentry*) * size);
+	map->entries = emalloc(sizeof(mapentry *) * size);
 
 	for (i = 0; i < size; i++)
 		map->entries[i] = NULL;
@@ -82,7 +82,7 @@ hash(tmmap *map, mapkey key)
  * @param key Key which should be used for this entry.
  * @returns Pointer to initialized mapentry.
  */
-static mapentry*
+static mapentry *
 newmapentry(mapkey key)
 {
 	mapentry *ent;
@@ -176,15 +176,15 @@ getval(tmmap *map, mapkey key, mapentry **dest)
  * @param next Entry on the right hand side of this one.
  * @returns Pointer to the newly created tape entry.
  */
-static tapeentry*
+static tapeentry *
 newtapeentry(unsigned char value, tapeentry *prev, tapeentry *next)
 {
 	tapeentry *entr;
 
 	entr = emalloc(sizeof(tapeentry));
 	entr->value = value;
-	entr->next  = next;
-	entr->prev  = prev;
+	entr->next = next;
+	entr->prev = prev;
 	return entr;
 }
 
@@ -193,7 +193,7 @@ newtapeentry(unsigned char value, tapeentry *prev, tapeentry *next)
  *
  * @returns Pointer to the newly created state.
  */
-tmstate*
+tmstate *
 newtmstate(void)
 {
 	tmstate *state;
@@ -209,7 +209,7 @@ newtmstate(void)
  *
  * @returns Pointer to the newly created turing maschine.
  */
-dtm*
+dtm *
 newtm(void)
 {
 	dtm *tm;
@@ -428,8 +428,8 @@ compute(dtm *tm, tmstate *state)
 		break;
 	case LEFT:
 		if (!tm->tape->prev)
-			tm->tape->prev = newtapeentry(BLANKCHAR,
-				NULL, tm->tape);
+			tm->tape->prev = newtapeentry(BLANKCHAR, NULL,
+			                              tm->tape);
 		tm->tape = tm->tape->prev;
 		break;
 	case STAY:
@@ -474,12 +474,12 @@ runtm(dtm *tm)
  * @param arg Additional argument to passed to the function.
  */
 void
-eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
+eachstate(dtm *tm, void (*fn)(tmstate *, void *), void *arg)
 {
 	size_t i;
 	mapentry *elem;
 
-	MAP_FOREACH(tm->states, elem, i)
+	MAP_FOREACH (tm->states, elem, i)
 		(*fn)(elem->data.state, arg);
 }
 
@@ -492,12 +492,12 @@ eachstate(dtm *tm, void (*fn)(tmstate*, void*), void *arg)
  * @param arg Additional argument passed to the function.
  */
 void
-eachtrans(tmstate *state, void (*fn)(tmtrans*, tmstate*, void*), void *arg)
+eachtrans(tmstate *state, void (*fn)(tmtrans *, tmstate *, void *), void *arg)
 {
 	size_t i;
 	mapentry *elem;
 
-	MAP_FOREACH(state->trans, elem, i)
+	MAP_FOREACH (state->trans, elem, i)
 		(*fn)(elem->data.trans, state, arg);
 }
 

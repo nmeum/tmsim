@@ -16,16 +16,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
 #include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "util.h"
 
@@ -45,7 +45,7 @@
  * @param str String to create marker for.
  * @returns Marker for the given string as described above.
  */
-char*
+char *
 mark(size_t pos, char *str)
 {
 	char *res;
@@ -70,7 +70,7 @@ mark(size_t pos, char *str)
  * @return A pointer to a dynamically allocated string containing
  * 	the content of the given line if it exists. NULL if it doesn't.
  */
-char*
+char *
 linenum(char *str, unsigned int line)
 {
 	size_t len;
@@ -165,7 +165,7 @@ xstrncmp(char *s1, char *s2, size_t n, size_t *res)
  * 	If an error occured while trying to read the given file NULL is
  * 	returned and errno is set to indicate the error.
  */
-char*
+char *
 readfile(char *fp)
 {
 	FILE *fd;
@@ -199,8 +199,9 @@ readfile(char *fp)
  * @param n Amount of bytes to copy.
  * @returns Pointer to a new string which is a duplicate of the given one.
  */
-char*
-estrndup(char *s, size_t n) {
+char *
+estrndup(char *s, size_t n)
+{
 	char *r;
 
 	if (!(r = strndup(s, n)))
@@ -216,7 +217,7 @@ estrndup(char *s, size_t n) {
  * @param size Amount of memory (in bytes) which should be allocated.
  * @returns Pointer to the allocated memory.
  */
-void*
+void *
 emalloc(size_t size)
 {
 	void *r;
@@ -234,7 +235,7 @@ emalloc(size_t size)
  * @param size Amount of memory (in bytes) which should be allocated.
  * @returns Pointer to the allocated memory.
  */
-void*
+void *
 erealloc(void *ptr, size_t size)
 {
 	void *r;

@@ -16,26 +16,27 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <sys/types.h>
 
-#include "util.h"
-#include "token.h"
-#include "scanner.h"
 #include "parser.h"
+#include "scanner.h"
+#include "token.h"
 #include "turing.h"
+#include "util.h"
 
 /**
  * Macro which should be used if the next expected token is a semicolon token.
  * If it isn't the proper error code is returned.
  */
 #define EXPSEM(T) \
-	do { if (T->type != TOK_SEMICOLON) \
-		return PAR_SEMICOLON; \
-	   } while(0)
+	do { \
+		if (T->type != TOK_SEMICOLON) \
+			return PAR_SEMICOLON; \
+	} while (0)
 
 /**
  * Returns the next token and advances the parser position.
@@ -44,7 +45,7 @@
  * @pre A previous call of this function should not have returned TOK_EOF.
  * @returns Next token.
  */
-static token*
+static token *
 next(parser *par)
 {
 	token *tok;
@@ -69,7 +70,7 @@ next(parser *par)
  * @param par Parser to extract next token from.
  * @returns Next token.
  */
-static token*
+static token *
 peek(parser *par)
 {
 	token *tok;
@@ -89,7 +90,7 @@ peek(parser *par)
  * @param str String which should be parsed.
  * @returns Pointer to the newly created parser.
  */
-parser*
+parser *
 newparser(char *str)
 {
 	parser *par;
@@ -139,9 +140,9 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 			goto ret;
 		case ERR_UNEXPECTED:
 			msg = "A terminal string was expected but the "
-				"lexer encountered a character which is "
-				"not part of the expected string. Perhaps "
-				"you misspelled 'start:' or 'accept:'.";
+			      "lexer encountered a character which is "
+			      "not part of the expected string. Perhaps "
+			      "you misspelled 'start:' or 'accept:'.";
 			goto ret;
 		}
 	}
@@ -150,72 +151,72 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	switch (err) {
 	case PAR_SEMICOLON:
 		msg = "Missing semicolon, maybe the previous transition "
-			"is missing a semicolon or a metadata information "
-			"was not properly terminated with a semicolon.";
+		      "is missing a semicolon or a metadata information "
+		      "was not properly terminated with a semicolon.";
 		break;
 	case PAR_STATEDEFTWICE:
 		msg = "This state was already defined previously. You can't "
-			"define states twice please move all transitions from "
-			"this state definition to the previous definition.";
+		      "define states twice please move all transitions from "
+		      "this state definition to the previous definition.";
 		break;
 	case PAR_TRANSDEFTWICE:
 		msg = "Only deterministic turing machines are supported. "
-			"Meaning you can't have more than one transition "
-			"for the same input symbol.";
+		      "Meaning you can't have more than one transition "
+		      "for the same input symbol.";
 		break;
 	case PAR_STARTKEY:
 		msg = "An initial state wasn't defined. Please define it "
-			"using the 'start:' keyword.";
+		      "using the 'start:' keyword.";
 		return fprintf(stream, "%s: %s\n", fn, msg);
 	case PAR_INITALSTATE:
 		msg = "The initial state value cannot be left empty.";
 		break;
 	case PAR_ACCEPTKEY:
 		msg = "Accepting states where not defined. Please define "
-			"one or more accepting states using the "
-			"'accept:' keyword.";
+		      "one or more accepting states using the "
+		      "'accept:' keyword.";
 		return fprintf(stream, "%s: %s\n", fn, msg);
 	case PAR_NONSTATEACCEPT:
 		msg = "Your accepting state list contains a token which is "
-			"not a state name or is empty.";
+		      "not a state name or is empty.";
 		break;
 	case PAR_STATEDEF:
 		msg = "Expected a state definition but didn't find a valid "
-			"state name. Valid state names must match the "
-			"following regex: 'q[0-9]*'.";
+		      "state name. Valid state names must match the "
+		      "following regex: 'q[0-9]*'.";
 		break;
 	case PAR_LBRACKET:
 		msg = "The parser expected an opening curly bracket as a "
-			"part of this state definition.";
+		      "part of this state definition.";
 		break;
 	case PAR_RBRACKET:
 		msg = "The parser expected a closing curly bracket as a "
-			"part of this state definition.";
+		      "part of this state definition.";
 		break;
 	case PAR_RSYMBOL:
 		msg = "Your transition definition is missing a symbol "
-			"which triggers this transition. This symbol "
-			"can only be an alphanumeric character or the "
-			"special blank character.";
+		      "which triggers this transition. This symbol "
+		      "can only be an alphanumeric character or the "
+		      "special blank character.";
 		break;
 	case PAR_DIRECTION:
 		msg = "Expected direction to move head to, this symbol is "
-			"not a valid head direction symbol.";
+		      "not a valid head direction symbol.";
 		break;
 	case PAR_WSYMBOL:
 		msg = "Your transition definition is missing a symbol "
-			"which is written to the tape when this transition "
-			"is performed. This symbol can only be an "
-			"alphanumeric character, a digit or the "
-			"special blank character.";
+		      "which is written to the tape when this transition "
+		      "is performed. This symbol can only be an "
+		      "alphanumeric character, a digit or the "
+		      "special blank character.";
 		break;
 	case PAR_NEXTSTATESYM:
 		msg = "The next state symbol ('=>') was expected but "
-			"not found.";
+		      "not found.";
 		break;
 	case PAR_NEXTSTATE:
 		msg = "Your transition is missing a state to transit to "
-			"when performing this transition.";
+		      "when performing this transition.";
 		break;
 	case PAR_OK:
 		/* Never reached */
@@ -225,7 +226,7 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 ret:
 	if (!(line = linenum(par->scr->input, tok->line))) {
 		msg = "Current token contains an invalid line number. "
-			"This is a bug, please consider reporting it.";
+		      "This is a bug, please consider reporting it.";
 		return fprintf(stream, "%s\n", msg);
 	}
 
@@ -236,7 +237,7 @@ ret:
 
 	marker = mark(pos, line);
 	r = fprintf(stream, "%s:%d:%d: %s\n %s\n %s\n", fn, tok->line,
-			tok->column, msg, line, marker);
+	            tok->column, msg, line, marker);
 
 	free(line);
 	free(marker);
@@ -302,7 +303,7 @@ parsemeta(parser *par, dtm *dest)
 
 		par->tok = next(par);
 	} while (par->tok->type == TOK_COMMA &&
-		par->tok->type != TOK_SEMICOLON);
+	         par->tok->type != TOK_SEMICOLON);
 
 	EXPSEM(par->tok);
 

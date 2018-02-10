@@ -24,33 +24,33 @@
  * equal to TOK_ERROR.
  */
 typedef enum {
-	ERR_OVERFLOW = 1,	/**< strtol(3) detected an integer overflow. */
-	ERR_UNDERFLOW = 2,	/**< strtol(3) detected an integer underflow. */
-	ERR_UNKOWN = 3,		/**< Lexer encountered an unknown character. */
-	ERR_UNEXPECTED = 4,	/**< Lexer encountered an unexpected character. */
+	ERR_OVERFLOW = 1,   /**< strtol(3) detected an integer overflow. */
+	ERR_UNDERFLOW = 2,  /**< strtol(3) detected an integer underflow. */
+	ERR_UNKOWN = 3,     /**< Lexer encountered an unknown character. */
+	ERR_UNEXPECTED = 4, /**< Lexer encountered an unexpected character. */
 } errorcode;
 
 /**
  * Valid values for the type field of the token struct.
  */
 typedef enum {
-	TOK_EOF,	/**< End of file. */
-	TOK_ERROR,	/**< Error occured (see errorcode above). */
+	TOK_EOF,   /**< End of file. */
+	TOK_ERROR, /**< Error occured (see errorcode above). */
 
-	TOK_START,	/**< Token specifies initial TM state. */
-	TOK_ACCEPT,	/**< Token specifies accepting TM states. */
-	TOK_NEXT,	/**< Token specifies next state in a transition. */
+	TOK_START,  /**< Token specifies initial TM state. */
+	TOK_ACCEPT, /**< Token specifies accepting TM states. */
+	TOK_NEXT,   /**< Token specifies next state in a transition. */
 
-	TOK_SYMBOL,	/**< TM tape alphabet symbol. */
-	TOK_STATE,	/**< TM state name, should match: 'q[0-9]+'. */
+	TOK_SYMBOL, /**< TM tape alphabet symbol. */
+	TOK_STATE,  /**< TM state name, should match: 'q[0-9]+'. */
 
-	TOK_COMMA,	/**< The ASCII ',' symbol. */
-	TOK_SEMICOLON,	/**< The ASCII ';' symbol. */
-	TOK_SMALLER,	/**< The ASCII '<' symbol. */
-	TOK_GREATER,	/**< The ASCII '>' symbol. */
-	TOK_LBRACKET,	/**< The ASCII '{' symbol */
-	TOK_RBRACKET,	/**< The ASCII '}' symbol */
-	TOK_PIPE,	/**< The ASCII '|' symbol. */
+	TOK_COMMA,     /**< The ASCII ',' symbol. */
+	TOK_SEMICOLON, /**< The ASCII ';' symbol. */
+	TOK_SMALLER,   /**< The ASCII '<' symbol. */
+	TOK_GREATER,   /**< The ASCII '>' symbol. */
+	TOK_LBRACKET,  /**< The ASCII '{' symbol */
+	TOK_RBRACKET,  /**< The ASCII '}' symbol */
+	TOK_PIPE,      /**< The ASCII '|' symbol. */
 } toktype;
 
 /**
@@ -59,13 +59,13 @@ typedef enum {
 typedef struct _token token;
 
 struct _token {
-	toktype type;		/**< Type of this token (see above). */
-	unsigned char value;	/**< Value of this token. */
+	toktype type;        /**< Type of this token (see above). */
+	unsigned char value; /**< Value of this token. */
 
-	unsigned int line;	/**< Line of token in input file. */
-	unsigned int column;	/**< Column of token in input file. */
+	unsigned int line;   /**< Line of token in input file. */
+	unsigned int column; /**< Column of token in input file. */
 };
 
-void freetoken(token*);
+void freetoken(token *);
 
 #endif

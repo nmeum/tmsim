@@ -54,8 +54,8 @@ struct _queue {
 };
 
 queue *newqueue(void);
-void freequeue(queue*);
-void enqueue(queue*, token*);
-token *dequeue(queue*);
+void freequeue(queue *);
+void enqueue(queue *, token *);
+token *dequeue(queue *);
 
 #endif

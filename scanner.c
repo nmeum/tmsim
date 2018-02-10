@@ -16,26 +16,26 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-#include <limits.h>
 #include <assert.h>
-#include <pthread.h>
 #include <ctype.h>
-#include <string.h>
+#include <limits.h>
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <sys/types.h>
 
-#include "util.h"
-#include "token.h"
 #include "queue.h"
 #include "scanner.h"
+#include "token.h"
 #include "turing.h"
+#include "util.h"
 
-static void lexspace(scanner*);
-static void lexcomment(scanner*);
-static void lexstate(scanner*);
-static void lexterm(scanner*);
+static void lexspace(scanner *);
+static void lexcomment(scanner *);
+static void lexstate(scanner *);
+static void lexterm(scanner *);
 
 /**
  * Reads the next character from the input string and increments current
@@ -64,7 +64,7 @@ static signed char
 peekch(scanner *scr)
 {
 	signed char nxt;
-	
+
 	nxt = nextch(scr);
 	if (nxt != -1)
 		scr->pos--;
@@ -221,7 +221,8 @@ lexspace(scanner *scr)
  * @param scr Pointer to the associated scanner.
  */
 static void
-lexcomment(scanner *scr) {
+lexcomment(scanner *scr)
+{
 	while (peekch(scr) != '\n')
 		if (nextch(scr) == -1)
 			break;
@@ -336,12 +337,12 @@ lexterm(scanner *scr)
  * @param pscr Void pointer to the scanner used for lexing.
  * @returns A null pointer.
  */
-static void*
+static void *
 tokloop(void *pscr)
 {
 	scanner *scr;
 
-	scr = (scanner*)pscr;
+	scr = (scanner *)pscr;
 	while (scr->state != NULL)
 		(*scr->state)(scr); /* fn must set scr->state. */
 
@@ -355,7 +356,7 @@ tokloop(void *pscr)
  * @param input Input string which should be scanned.
  * @returns Scanner for the given input string.
  */
-scanner*
+scanner *
 scanstr(char *input)
 {
 	scanner *scr;
@@ -368,7 +369,7 @@ scanstr(char *input)
 	scr->input = input;
 	scr->line = 1;
 
-	if (pthread_create(&scr->thread, NULL, tokloop, (void*)scr))
+	if (pthread_create(&scr->thread, NULL, tokloop, (void *)scr))
 		die("pthread_create failed");
 
 	return scr;
@@ -402,7 +403,7 @@ freescanner(scanner *scr)
  * @pre A previous call of this function didn't return TOK_EOF.
  * @param scr Scanner to extract token from.
  */
-token*
+token *
 nexttoken(scanner *scr)
 {
 	return dequeue(scr->tqueue);

@@ -23,8 +23,8 @@
 
 #include <sys/types.h>
 
-#include "token.h"
 #include "queue.h"
+#include "token.h"
 
 /**
  * Can be used in conjunction with emit if the character in the input
@@ -33,8 +33,7 @@
  *
  * @param SCANNER Scanner for which a value should be emitted.
  */
-#define TOKAUTO(SCANNER) \
-	((unsigned char)SCANNER->input[scr->start])
+#define TOKAUTO(SCANNER) ((unsigned char)SCANNER->input[scr->start])
 
 /**
  * Macro which must be used to return from a ::scanfn function. This
@@ -45,7 +44,10 @@
  * 	state.
  */
 #define LEXRET(SCANNER, FUNCTION) \
-	do { SCANNER->state = FUNCTION; return; } while (0)
+	do { \
+		SCANNER->state = FUNCTION; \
+		return; \
+	} while (0)
 
 enum {
 	/**
@@ -89,18 +91,18 @@ struct _scanner {
 	 */
 	queue *tqueue;
 
-	char *input;		/**< Input string passed to ::scanstr. */
-	size_t inlen;		/**< Length of the input string. */
+	char *input;  /**< Input string passed to ::scanstr. */
+	size_t inlen; /**< Length of the input string. */
 
-	size_t pos;		/**< Current position in the input string. */
-	size_t start;		/**< Start position of current token in input string. */
+	size_t pos;   /**< Current position in the input string. */
+	size_t start; /**< Start position of current token in input string. */
 
-	unsigned int line;	/**< Line being analyzed currently. */
-	unsigned int column;	/**< Column being analyzed currently. */
+	unsigned int line;   /**< Line being analyzed currently. */
+	unsigned int column; /**< Column being analyzed currently. */
 };
 
-scanner *scanstr(char*);
-token *nexttoken(scanner*);
-void freescanner(scanner*);
+scanner *scanstr(char *);
+token *nexttoken(scanner *);
+void freescanner(scanner *);
 
 #endif
