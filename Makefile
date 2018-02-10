@@ -25,10 +25,13 @@ tmsim: $(OBJECTS) tmsim.o
 tmsim-export: $(OBJECTS) export.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+test: tmsim
+	cd tests/ && ./run_tests.sh
+
 format:
 	clang-format -style=file -i $(SOURCES) $(HEADERS)
 
 clean:
 	$(RM) $(PROGS) $(OBJECTS) export.o tmsim.o
 
-.PHONY: all clean format
+.PHONY: all clean format test
