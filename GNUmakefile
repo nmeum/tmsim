@@ -7,7 +7,7 @@ HEADERS = $(SOURCES:.c=.h)
 
 CFLAGS ?= -O3 -g
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" \
-	-Wpedantic -Wall -Wextra -Wconversion -Werror
+	-Wpedantic -Wall -Wextra -Wconversion -Wmissing-prototypes -Werror
 
 ifeq "$(findstring clang,$(shell $(CC) --version))" "clang"
 	CFLAGS += -Wdocumentation
