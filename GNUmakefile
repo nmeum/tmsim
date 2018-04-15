@@ -5,9 +5,9 @@ SOURCES = scanner.c parser.c turing.c token.c queue.c util.c
 OBJECTS = $(SOURCES:.c=.o)
 HEADERS = $(SOURCES:.c=.h)
 
-CFLAGS ?= -O3 -g
+CFLAGS ?= -O3 -g -Werror
 CFLAGS += -std=c99 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" \
-	-Wpedantic -Wall -Wextra -Wconversion -Wmissing-prototypes -Werror
+	-Wpedantic -Wall -Wextra -Wconversion -Wmissing-prototypes
 
 ifeq "$(findstring clang,$(shell $(CC) --version))" "clang"
 	CFLAGS += -Wdocumentation
