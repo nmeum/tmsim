@@ -104,10 +104,12 @@ freemapentry(mapentry *ent)
 	mapentry *next;
 
 	assert(ent);
-	for (next = ent->next; next != NULL; next = next->next)
-		freemapentry(next);
 
-	free(ent);
+	do {
+		next = ent->next;
+		free(ent);
+		ent = next;
+	} while (ent != NULL);
 }
 
 /**
