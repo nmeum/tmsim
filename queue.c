@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2018 Sören Tempel
+ * Copyright © 2016-2019 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -17,6 +17,7 @@
  */
 
 #include <assert.h>
+#include <errno.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdlib.h>
@@ -38,8 +39,8 @@ newqueue(void)
 	qu = emalloc(sizeof(queue));
 	qu->head = qu->tail = 0;
 
-	if (pthread_mutex_init(&qu->hmtx, NULL) ||
-	    pthread_mutex_init(&qu->tmtx, NULL))
+	if ((errno = pthread_mutex_init(&qu->hmtx, NULL)) ||
+	    (errno = pthread_mutex_init(&qu->tmtx, NULL)))
 		die("pthread_mutex_init failed");
 
 	if (sem_init(&qu->fullsem, 0, 0) ||
@@ -102,8 +103,8 @@ freequeue(queue *qu)
 	if (sem_destroy(&qu->fullsem) || sem_destroy(&qu->emptysem))
 		die("sem_destroy failed");
 
-	if (pthread_mutex_destroy(&qu->hmtx) ||
-	    pthread_mutex_destroy(&qu->tmtx))
+	if ((errno = pthread_mutex_destroy(&qu->hmtx)) ||
+	    (errno = pthread_mutex_destroy(&qu->tmtx)))
 		die("pthread_mutex_destroy failed");
 
 	free(qu);

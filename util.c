@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2018 Sören Tempel
+ * Copyright © 2016-2019 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -17,6 +17,7 @@
  */
 
 #include <assert.h>
+#include <errno.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdio.h>
@@ -255,7 +256,7 @@ erealloc(void *ptr, size_t size)
 void
 pthread_mutex_elock(pthread_mutex_t *lock)
 {
-	if (pthread_mutex_lock(lock))
+	if ((errno = pthread_mutex_lock(lock)))
 		die("pthread_mutex_lock failed");
 }
 
@@ -268,7 +269,7 @@ pthread_mutex_elock(pthread_mutex_t *lock)
 void
 pthread_mutex_eunlock(pthread_mutex_t *lock)
 {
-	if (pthread_mutex_unlock(lock))
+	if ((errno = pthread_mutex_unlock(lock)))
 		die("pthread_mutex_unlock failed");
 }
 

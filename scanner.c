@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2018 Sören Tempel
+ * Copyright © 2016-2019 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -369,7 +370,7 @@ scanstr(char *input)
 	scr->input = input;
 	scr->line = 1;
 
-	if (pthread_create(&scr->thread, NULL, tokloop, (void *)scr))
+	if ((errno = pthread_create(&scr->thread, NULL, tokloop, (void *)scr)))
 		die("pthread_create failed");
 
 	return scr;
@@ -386,7 +387,7 @@ freescanner(scanner *scr)
 	assert(scr);
 
 	if (!pthread_cancel(scr->thread)) {
-		if (pthread_join(scr->thread, NULL))
+		if ((errno = pthread_join(scr->thread, NULL)))
 			die("pthread_join failed");
 	}
 
