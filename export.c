@@ -125,6 +125,7 @@ main(int argc, char **argv)
 	parser *par;
 	char *fc, *fp;
 	FILE *ofd;
+	ssize_t len;
 
 	ofd = stdout;
 	while ((opt = getopt(argc, argv, "s:i:a:o:hv")) != -1) {
@@ -155,17 +156,15 @@ main(int argc, char **argv)
 		usage(argv[0]);
 
 	fp = argv[optind];
-	if (!(fc = readfile(fp)))
+	if ((len = readfile(&fc, fp)) == -1)
 		die("couldn't read from input file");
-	par = newparser(fc);
+	par = newparser(fc, (size_t)len);
 
 	tm = newtm();
 	if ((ret = parsetm(par, tm)) != PAR_OK) {
 		strparerr(par, ret, fp, stdout);
 		return EXIT_FAILURE;
 	}
-
-	free(fc);
 	freeparser(par);
 
 	export(tm, ofd);

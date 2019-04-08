@@ -101,7 +101,7 @@ struct _scanner {
 	unsigned int column; /**< Column being analyzed currently. */
 };
 
-scanner *scanstr(char *);
+scanner *scanstr(char *, size_t);
 token *nexttoken(scanner *);
 void freescanner(scanner *);
 

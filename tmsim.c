@@ -77,6 +77,7 @@ main(int argc, char **argv)
 	dtm *tm;
 	parser *par;
 	char *in, *fc, *fp;
+	ssize_t len;
 
 	rtape = 0;
 	while ((opt = getopt(argc, argv, "rhv")) != -1) {
@@ -97,17 +98,15 @@ main(int argc, char **argv)
 		usage(argv[0]);
 
 	fp = argv[optind];
-	if (!(fc = readfile(fp)))
+	if ((len = readfile(&fc, fp)) == -1)
 		die("couldn't read from input file");
-	par = newparser(fc);
+	par = newparser(fc, (size_t)len);
 
 	tm = newtm();
 	if ((ret = parsetm(par, tm)) != PAR_OK) {
 		strparerr(par, ret, fp, stderr);
 		return EXIT_FAILURE;
 	}
-
-	free(fc);
 	freeparser(par);
 
 	if (argc <= 2 || ++optind >= argc)

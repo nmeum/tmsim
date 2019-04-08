@@ -38,7 +38,7 @@
 	} while (0)
 
 int xstrncmp(char *, char *, size_t, size_t *);
-char *readfile(char *);
+ssize_t readfile(char **, char *);
 char *mark(size_t, char *);
 
 char *linenum(char *, unsigned int);

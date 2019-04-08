@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016-2018 Sören Tempel
+ * Copyright © 2016-2019 Sören Tempel
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public
@@ -87,16 +87,17 @@ peek(parser *par)
  * Allocates memory for a new parser, initializes it and returns a
  * pointer to it.
  *
- * @param str String which should be parsed.
+ * @param str Input which should be parsed.
+ * @param len Length of the input.
  * @returns Pointer to the newly created parser.
  */
 parser *
-newparser(char *str)
+newparser(char *str, size_t len)
 {
 	parser *par;
 
 	par = emalloc(sizeof(parser));
-	par->scr = scanstr(str);
+	par->scr = scanstr(str, len);
 	par->peektok = par->prevtok = par->tok = NULL;
 	return par;
 }

@@ -84,7 +84,7 @@ typedef enum {
 	PAR_NEXTSTATE,    /**< Expected name of new state. */
 } parerr;
 
-parser *newparser(char *);
+parser *newparser(char *, size_t);
 parerr parsetm(parser *, dtm *);
 void freeparser(parser *);
 int strparerr(parser *, parerr, char *, FILE *);

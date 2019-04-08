@@ -25,6 +25,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -158,38 +159,37 @@ xstrncmp(char *s1, char *s2, size_t n, size_t *res)
 }
 
 /**
- * Reads the content of the given file at the given path and returns a
- * pointer to a newly allocated string containing the content.
+ * Maps the given file to memory and returns the address of the mapped
+ * memory location. If the file is empty no mapping is performed and
+ * zero is returned.
  *
- * @param fp to file which should be read.
- * @returns Pointer to a string containing the content of the given file.
- * 	If an error occured while trying to read the given file NULL is
- * 	returned and errno is set to indicate the error.
+ * @param dest Memory location to which the address of the mapping is
+ * 	written. It is not initialized if zero is returned.
+ * @param fp Path to file which should be read.
+ * @returns Length of the mapped memory location or zero if no mapping
+ * 	has been performed. If an error occured while trying to read the
+ * 	given file NULL is returned and errno is set to indicate the error.
  */
-char *
-readfile(char *fp)
+ssize_t
+readfile(char **dest, char *fp)
 {
-	FILE *fd;
-	char *fc;
+	int fd;
+	off_t len;
 	struct stat st;
-	size_t len, read;
 
-	if (stat(fp, &st))
-		return NULL;
-	len = (size_t)st.st_size;
+	if ((fd = open(fp, O_RDONLY)) == -1)
+		return -1;
+	if (fstat(fd, &st))
+		return -1;
+	if ((len = st.st_size) <= 0)
+		return 0;
 
-	fc = emalloc(len + 1);
-	if (!(fd = fopen(fp, "r")))
-		return NULL;
+	*dest = mmap(NULL, (size_t)len, PROT_READ, MAP_PRIVATE, fd, 0);
+	if (*dest == MAP_FAILED)
+		return -1;
 
-	read = fread(fc, sizeof(char), len, fd);
-	if (ferror(fd))
-		return NULL;
-	if (fclose(fd))
-		return NULL;
-
-	fc[read] = '\0';
-	return fc;
+	close(fd);
+	return len;
 }
 
 /**

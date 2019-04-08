@@ -267,7 +267,7 @@ lexstate(scanner *scr)
 		goto ret;
 	}
 
-	strncpy(buf, input, len);
+	memcpy(buf, input, len);
 	buf[len] = '\0';
 
 	value = strtol(buf, NULL, 10);
@@ -351,14 +351,15 @@ tokloop(void *pscr)
 }
 
 /**
- * Creates a new scanner for the given input string and starts lexing the
- * string in a seperated thread.
+ * Creates a new scanner for the given input and starts lexing the
+ * it in a seperated thread.
  *
- * @param input Input string which should be scanned.
- * @returns Scanner for the given input string.
+ * @param input Input which should be scanned.
+ * @param len Length of the input.
+ * @returns Scanner for the given input.
  */
 scanner *
-scanstr(char *input)
+scanstr(char *input, size_t len)
 {
 	scanner *scr;
 
@@ -366,7 +367,7 @@ scanstr(char *input)
 	scr->tqueue = newqueue();
 	scr->state = lexany;
 	scr->pos = scr->start = scr->column = 0;
-	scr->inlen = strlen(input);
+	scr->inlen = len;
 	scr->input = input;
 	scr->line = 1;
 
