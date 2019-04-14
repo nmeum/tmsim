@@ -207,8 +207,7 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 		msg = "Your transition definition is missing a symbol "
 		      "which is written to the tape when this transition "
 		      "is performed. This symbol can only be an "
-		      "alphanumeric character, a digit or the "
-		      "special blank character.";
+		      "alphanumeric character or the special blank character.";
 		break;
 	case PAR_NEXTSTATESYM:
 		msg = "The next state symbol ('=>') was expected but "
