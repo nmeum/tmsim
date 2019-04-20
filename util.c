@@ -51,11 +51,14 @@
 char *
 mark(size_t pos, char *str)
 {
+	size_t i;
 	char *res;
 
-	res = estrndup(str, pos + 1);
-	for (size_t i = 0; i <= pos; i++) {
-		if (res[i] != '\t')
+	/* +2 for \0 and ^ character */
+	res = emalloc(pos + 2);
+
+	for (i = 0; i < pos; i++) {
+		if ((res[i] = str[i]) != '\t')
 			res[i] = ' ';
 	}
 
