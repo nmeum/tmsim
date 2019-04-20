@@ -102,10 +102,10 @@ issymbol(char c)
  *
  * @param scr Scanner which found the token that should be emitted.
  * @param tkt Type of the token.
- * @param value Value of the token, should be greater than or equal to zero.
+ * @param value Value of the token.
  */
 static void
-emit(scanner *scr, toktype tkt, unsigned char value)
+emit(scanner *scr, toktype tkt, int value)
 {
 	token *tok;
 
@@ -273,10 +273,10 @@ lexstate(scanner *scr)
 	value = strtol(buf, NULL, 10);
 	if (value < 0)
 		emit(scr, TOK_ERROR, ERR_UNDERFLOW);
-	else if (value > UCHAR_MAX)
+	else if (value > INT_MAX)
 		emit(scr, TOK_ERROR, ERR_OVERFLOW);
 	else
-		emit(scr, TOK_STATE, (unsigned char)value);
+		emit(scr, TOK_STATE, (int)value);
 
 ret:
 	scr->column += (unsigned int)len; /* Initial 'q' and digits. */

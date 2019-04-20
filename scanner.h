@@ -33,7 +33,7 @@
  *
  * @param SCANNER Scanner for which a value should be emitted.
  */
-#define TOKAUTO(SCANNER) ((unsigned char)SCANNER->input[scr->start])
+#define TOKAUTO(SCANNER) (SCANNER->input[scr->start])
 
 /**
  * Macro which must be used to return from a ::scanfn function. This
@@ -58,9 +58,10 @@ enum {
 
 	/**
 	 * Amount of bytes needed for a string representation of the
-	 * ::tmname type plus one byte for null termination.
+	 * ::tmname type plus one byte for null termination. This value
+	 * is somewhat heuristic.
 	 */
-	STATELEN = 4,
+	STATELEN = 64,
 };
 
 /**

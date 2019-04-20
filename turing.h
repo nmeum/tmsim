@@ -46,7 +46,7 @@ enum {
 /**
  * Type used for turing machine state names.
  */
-typedef unsigned int tmname;
+typedef int tmname;
 
 /**
  * Enum describing direction head should be moved in.
@@ -63,7 +63,7 @@ typedef struct _tmtrans tmtrans; /**< Transition from one state to another. */
 /**
  * Type used as a key for the ::tmmap.
  */
-typedef unsigned int mapkey;
+typedef int mapkey;
 
 /**
  * Entry in a bucket hashing implementation.
@@ -106,14 +106,14 @@ struct _tmtrans {
 	/**
 	 * Symbol which needs to be read to trigger this transition.
 	 */
-	unsigned char rsym;
+	char rsym;
 
 	/**
 	 * Symbol which should be written on the tape when performing this
 	 * tranisition. The symbol which triggers this transition is not
 	 * stored in this struct and is used as a key in the tmmap instead.
 	 */
-	unsigned char wsym;
+	char wsym;
 
 	/**
 	 * Direction to move head to after performing this transition.
@@ -134,9 +134,9 @@ struct _tmtrans {
 typedef struct _tapeentry tapeentry;
 
 struct _tapeentry {
-	unsigned char value; /**< Symbol for this tape entry. */
-	tapeentry *next;     /**< Entry on the right-hand side of this one. */
-	tapeentry *prev;     /**< Entry on the left-hand side of this one. */
+	char value;      /**< Symbol for this tape entry. */
+	tapeentry *next; /**< Entry on the right-hand side of this one. */
+	tapeentry *prev; /**< Entry on the left-hand side of this one. */
 };
 
 /**
@@ -158,7 +158,7 @@ tmstate *newtmstate(void);
 void addaccept(dtm *, tmname);
 
 int addtrans(tmstate *, tmtrans *);
-int gettrans(tmstate *, unsigned char, tmtrans **);
+int gettrans(tmstate *, char, tmtrans **);
 
 int addstate(dtm *, tmstate *);
 int getstate(dtm *, tmname, tmstate **);

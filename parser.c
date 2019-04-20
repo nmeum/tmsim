@@ -131,7 +131,7 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	if (tok->type == TOK_ERROR) {
 		switch (tok->value) {
 		case ERR_OVERFLOW:
-			msg = "Numeric state name exceeds UCHAR_MAX.";
+			msg = "Numeric state name exceeds INT_MAX.";
 			goto ret;
 		case ERR_UNDERFLOW:
 			msg = "Numeric state names can't be negative.";
@@ -330,7 +330,7 @@ parsetrans(parser *par, tmtrans *dest)
 	par->tok = next(par);
 	if (par->tok->type != TOK_SYMBOL)
 		return PAR_RSYMBOL;
-	dest->rsym = par->tok->value;
+	dest->rsym = (char)par->tok->value;
 
 	par->tok = next(par);
 	switch (par->tok->type) {
@@ -350,7 +350,7 @@ parsetrans(parser *par, tmtrans *dest)
 	par->tok = next(par);
 	if (par->tok->type != TOK_SYMBOL)
 		return PAR_WSYMBOL;
-	dest->wsym = par->tok->value;
+	dest->wsym = (char)par->tok->value;
 
 	par->tok = next(par);
 	if (par->tok->type != TOK_NEXT)

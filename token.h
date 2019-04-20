@@ -59,8 +59,8 @@ typedef enum {
 typedef struct _token token;
 
 struct _token {
-	toktype type;        /**< Type of this token (see above). */
-	unsigned char value; /**< Value of this token. */
+	toktype type; /**< Type of this token (see above). */
+	int value;    /**< Value of this token. */
 
 	unsigned int line;   /**< Line of token in input file. */
 	unsigned int column; /**< Column of token in input file. */
