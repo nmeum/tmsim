@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdio.h>
