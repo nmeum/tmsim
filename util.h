@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TMSIM_UTIL_H
-#define _TMSIM_UTIL_H
+#ifndef TMSIM_UTIL_H
+#define TMSIM_UTIL_H
 
 #include <pthread.h>
 #include <semaphore.h>

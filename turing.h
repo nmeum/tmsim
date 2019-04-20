@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TMSIM_TURING_H
-#define _TMSIM_TURING_H
+#ifndef TMSIM_TURING_H
+#define TMSIM_TURING_H
 
 #include <sys/types.h>
 

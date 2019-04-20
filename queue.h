@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TMSIM_QUEUE_H
-#define _TMSIM_QUEUE_H
+#ifndef TMSIM_QUEUE_H
+#define TMSIM_QUEUE_H
 
 #include <pthread.h>
 #include <semaphore.h>

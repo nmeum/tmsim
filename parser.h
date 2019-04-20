@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TMSIM_PARSER_H
-#define _TMSIM_PARSER_H
+#ifndef TMSIM_PARSER_H
+#define TMSIM_PARSER_H
 
 #include <stdio.h>
 

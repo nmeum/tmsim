@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TMSIM_SCANNER_H
-#define _TMSIM_SCANNER_H
+#ifndef TMSIM_SCANNER_H
+#define TMSIM_SCANNER_H
 
 #include <pthread.h>
 

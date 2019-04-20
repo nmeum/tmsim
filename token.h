@@ -16,8 +16,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TMSIM_TOKEN_H
-#define _TMSIM_TOKEN_H
+#ifndef TMSIM_TOKEN_H
+#define TMSIM_TOKEN_H
 
 /**
  * Error codes used as token value when the value of the token type field is
