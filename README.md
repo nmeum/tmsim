@@ -8,8 +8,8 @@ Dependencies
 
 The following software is required to build tmsim:
 
-	- GNU make
-	- C99 compiler (e.g. gcc)
+- GNU make
+- C99 compiler (e.g. gcc)
 
 Building
 ========
