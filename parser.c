@@ -382,7 +382,6 @@ static parerr
 parsestate(parser *par, tmstate *dest)
 {
 	tmtrans *trans;
-	token *t;
 	parerr ret;
 
 	par->tok = next(par);
@@ -394,7 +393,7 @@ parsestate(parser *par, tmstate *dest)
 	if (par->tok->type != TOK_LBRACKET)
 		return PAR_LBRACKET;
 
-	while ((t = peek(par))->type != TOK_RBRACKET) {
+	while (peek(par)->type != TOK_RBRACKET) {
 		trans = emalloc(sizeof(tmtrans));
 		if ((ret = parsetrans(par, trans)) != PAR_OK) {
 			free(trans);
@@ -436,9 +435,8 @@ parsestates(parser *par, dtm *dest)
 {
 	parerr ret;
 	tmstate *state;
-	token *t;
 
-	while ((t = peek(par))->type != TOK_EOF) {
+	while (peek(par)->type != TOK_EOF) {
 		state = newtmstate();
 		if ((ret = parsestate(par, state)) != PAR_OK) {
 			free(state);
