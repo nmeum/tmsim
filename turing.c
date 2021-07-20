@@ -345,6 +345,7 @@ writetape(dtm *tm, char *str)
 	last = tm->tape;
 	for (ent = tm->tape; ent; ent = ent->next)
 		last = ent;
+	assert(last);
 
 	while ((c = *str++)) {
 		ent = newtapeentry(c, last, NULL);
