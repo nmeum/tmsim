@@ -184,7 +184,7 @@ strparerr(parser *par, parerr err, char *fn, FILE *stream)
 	case PAR_STATEDEF:
 		msg = "Expected a state definition but didn't find a valid "
 		      "state name. Valid state names must match the "
-		      "following regex: 'q[0-9]*'.";
+		      "following regex: 'q[0-9]+'.";
 		break;
 	case PAR_LBRACKET:
 		msg = "The parser expected an opening curly bracket as a "
