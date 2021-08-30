@@ -170,7 +170,7 @@ void eachstate(dtm *, void (*fn)(tmstate *, void *), void *);
 void eachtrans(tmstate *, void (*fn)(tmtrans *, tmstate *, void *), void *);
 
 int runtm(dtm *);
-char dirstr(direction);
+int dirstr(direction);
 int verifyinput(char *, size_t *);
 
 #endif

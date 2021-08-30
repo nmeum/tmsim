@@ -509,7 +509,7 @@ eachtrans(tmstate *state, void (*fn)(tmtrans *, tmstate *, void *), void *arg)
  * @param dir Head direction which should be converted.
  * @returns Char describing the direction.
  */
-char
+int
 dirstr(direction dir)
 {
 	switch (dir) {
