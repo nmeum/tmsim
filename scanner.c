@@ -45,7 +45,7 @@ static void lexterm(scanner *);
  * @param scr Scanner from which character should be read.
  * @returns The next character or -1 if there is none.
  */
-static signed char
+static int
 nextch(scanner *scr)
 {
 	if (scr->pos >= scr->inlen)
@@ -61,10 +61,10 @@ nextch(scanner *scr)
  * @param scr Scanner from which character should be read.
  * @returns The next character or -1 if there is none.
  */
-static signed char
+static int
 peekch(scanner *scr)
 {
-	signed char nxt;
+	int nxt;
 
 	nxt = nextch(scr);
 	if (nxt != -1)
@@ -92,7 +92,7 @@ ignore(scanner *scr)
  * @returns Non-zero integer if it is, zero if it isn't.
  */
 static int
-issymbol(char c)
+issymbol(int c)
 {
 	return isalnum(c) || c == BLANKCHAR;
 }
@@ -128,7 +128,7 @@ emit(scanner *scr, toktype tkt, int value)
 static void
 lexany(scanner *scr)
 {
-	signed char nxt;
+	int nxt;
 
 	/* Make this function a cancel point. */
 	pthread_testcancel();
