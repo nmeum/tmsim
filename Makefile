@@ -1,3 +1,6 @@
+# This is a POSIX Makefile as per IEEE P1003.1™-202x/D3.
+.POSIX:
+
 VERSION = 1.0.0
 PROGS   = tmsim tmsim-export
 
@@ -31,4 +34,3 @@ clean:
 	$(RM) $(PROGS) $(OBJECTS) export.o tmsim.o
 
 .PHONY: all clean format test
-.POSIX:
