@@ -6,15 +6,7 @@ A fast turing machine simulator with graphviz export functionality.
 Dependencies
 ============
 
-The following software is required to build tmsim:
-
-- GNU make
-- C99 compiler (e.g. gcc)
-
-Building
-========
-
-If you installed all dependencies build tmsim the following way:
+In order to build tmsim run the following command:
 
 	$ make
 
